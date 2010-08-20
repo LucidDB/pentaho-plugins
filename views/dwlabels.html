@@ -1,0 +1,90 @@
+<html>
+<title>Set Warehouse Label</title>
+<meta name="helpTopic" content="CV/Business_User/creating_a_new_report.html#choosing_an_analysis_area">
+</html>
+<body>
+<script type="text/javascript" src="scripts/dojo/dojo.js"></script>
+<script type="text/javascript" src="scripts/cv/common.js"></script>
+<script type="text/javascript">
+    <!--
+    if (typeof cv != "undefined") {
+        dojo.hostenv.setModulePrefix('clearview.widget','../widget');
+        cv.contextPath = "";
+    }
+    -->
+</script>
+<link rel="stylesheet" type="text/css" media="all"   href="styles/common.css" /> 
+<link rel="stylesheet" type="text/css" media="all"   href="styles/content.css" /> 
+<link rel="stylesheet" type="text/css" media="all" href="styles/report/selectArea.css" />   
+
+
+
+
+	<div class="selectAreaWizard">
+
+		<h2>Select Schema and Cube to Analyze</h2>
+		
+		<div class="analysisArea clearfix">
+			Specify which schema and cube you want to analyze.  This will determine which fields you will have available.
+				<img id="helpArea" class="helpIcon" title="Help on selecting Analysis area" src="images/iconHelp.gif"
+				onclick="cv.util.getHelp('CV/Business_User/creating_a_new_report.html#choosing_an_analysis_area')">	
+		</div>
+		
+		<div id="description" class="analysisAreaDescription clearfix">
+            <table cellspacing="22">
+                <tr>
+                <td><strong>Schema</strong></td>
+                <td><select id="schemas" name="schema" style="width:300" onChange="showCubes()"></select></td>
+                </tr>
+                <tr>
+                <td><strong>Cube</strong></td>
+                <td><select id="cubes" name="cube" style="width:300"></select></td>
+                </tr>
+            </table>
+		</div>
+			
+        <div class="controls clearfix">
+            <div class="buttons">
+    	        <div id="btnNext">OK</div>
+            </div>
+        </div>
+    </div>
+
+	
+	
+<script type="text/javascript">
+    var catalogs = @{selectSchemaBean.catalogs};
+    var schemaSelect = document.getElementById("schemas");
+    var cubeSelect = document.getElementById("cubes");
+
+    function showCubes(){
+        cubeSelect.options.length = 0;
+        var cubes = catalogs[schemaSelect.selectedIndex].schema.cubes;
+        for (var i=0; i < cubes.length; i++)
+        {
+            var id = cubes[i].name;
+            if (typeof cubes[i].id != "undefined") {
+                id = cubes[i].id;
+            }
+            var opt = new Option(cubes[i].name, id);
+            cubeSelect.options[cubeSelect.options.length] = opt;
+        }
+    }
+
+    dojo.addOnLoad(function() { 
+        
+        for (var i=0; i < catalogs.length; i++)
+        {
+            var opt = new Option(catalogs[i].name,catalogs[i].name);
+            schemaSelect.options[schemaSelect.options.length] = opt;
+        }
+        showCubes();
+    });
+    
+    dojo.event.connect(dojo.byId("btnNext"), "onclick", function() {
+        window.location.href = "editor?command=new&catalog=" + schemaSelect.value + "&cube=" + cubeSelect.value;
+    });
+
+</script>
+
+</body>

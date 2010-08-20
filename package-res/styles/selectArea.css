@@ -1,0 +1,145 @@
+
+
+/* Select Analaysis Area Wizard */
+
+html, body {
+	background-color: #CCC;
+	text-align: center;
+}
+
+.selectAreaWizard {
+	text-align: left;
+	margin-top: 5%;
+	background-color: #FFFFFF;
+	border: 1px solid #848484;
+	margin-left: auto;
+	margin-right: auto;
+	width: 470px;
+	padding: 2px;
+	font-size: 85%;
+}
+
+.selectAreaWizard H2 {
+	background-color:#D3D3D3;
+	padding: 5px;
+	font-size: 107%;
+}
+
+.selectAreaWizard .analysisArea {
+	padding: 10px;
+}
+
+#helpArea {
+	margin-left:5px;
+} 
+
+.selectAreaWizard .analysisAreaDescription {
+	margin: 0px 10px 20px 10px;
+	border: 1px solid #848484;
+	padding: 5px;
+}
+
+.selectAreaWizard .analysisAreaDescription .selection {
+	float: left;
+	width: 33%
+}
+
+.selectAreaWizard .analysisAreaDescription .selection TABLE {
+	border-spacing: 0;
+}
+
+.selectAreaWizard .analysisAreaDescription .summary {
+	float: right;
+	width: 66%
+}
+
+.selectAreaWizard .analysisAreaDescription P {
+	margin-top: 1em;
+}
+
+.selectAreaWizard .analysisAreaDescription LI {
+	list-style: circle;
+}
+
+.selectAreaWizard .analysisAreaDescription UL {
+	padding-left: 15px;
+	margin-top: 0px;
+}
+
+.selectAreaWizard .controls {
+}
+
+.selectAreaWizard .controls .buttons {
+	float: right;
+	padding-left: 2px;
+}
+
+.selectAreaWizard .controls .buttons DIV {
+	text-align: center;
+	float: left;
+	height: 15px;
+	cursor: pointer;
+	padding: 4px 6px;
+	min-width: 50px;
+}
+
+.selectAreaWizard #btnCancel {
+	background-image: url('../../label/images/report/button_bg.png');
+	border: 1px solid #D3D3D3;
+}
+
+.selectAreaWizard #btnNext {
+	background-image: url('../../label/images/report/button_bg.png');
+	border: 1px solid #D3D3D3;
+}
+
+.selectAreaWizard .labelTable{
+  border: 1px solid silver;
+  width: 400px;  
+}
+
+.selectAreaWizard .dwTableRow{
+  padding: 2px;
+  margin-bottom:2px;
+  height: 20px  
+}
+
+.selectAreaWizard .selectedRow{
+  background-color: silver;
+  text-color: white;
+  padding: 2px;
+  margin-bottom:2px;
+  height: 20px  
+}
+
+.selectAreaWizard .dwLabelCell{
+  border: 1px solid silver;
+  width: 200px;
+  cell-spacing: 2px;
+}
+
+.selectAreaWizard .dwTimestampCell{
+  border: 1px solid silver;
+  width: 200px;
+  cell-spacing: 2px;
+}
+
+.selectAreaWizard .buttonLeft{
+  text-align: left;
+}
+
+.selectAreaWizard .buttonCenter{
+  text-align: center;
+}
+
+.selectAreaWizard .buttonRight{
+  text-align: right;
+}
+
+.selectAreaWizard .buttonTable{
+  //border: 1px solid silver;
+  width: 400px;
+}
+
+
+/* End Select Analaysis Area Wizard */

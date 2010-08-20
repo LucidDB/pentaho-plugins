@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin title="Label Plugin">
+
+  <webservice id="labelService" type="gwt" class="com.dynamobi.label.server.WHLabelServiceImplLite"/>
+
+  <content-generator id="label" title="GWT Echo" type="xlabel" class="com.dynamobi.label.WHLabelContentGenerator"/>
+
+  <static-paths>
+  	<static-path url="/label/gecho-res" localFolder="resources"/>
+  	<static-path url="/label/templates" localFolder="templates"/>
+  	<static-path url="/label/styles" localFolder="styles"/>
+  	<static-path url="/label/help" localFolder="help"/>
+  	<static-path url="/label/images" localFolder="images"/>
+    <static-path url="/label/scripts" localFolder="scripts"/>
+    <static-path url="/label/label" localFolder="label"/>
+  </static-paths>  
+
+  <menu-items>
+	<menu-item id="datawarehouselables1" anchor="tools-submenu" label="Set Warehouse Labels" command="content/label/selectSchema" type="MENU_ITEM" how="LAST_CHILD"/>
+  </menu-items>
+
+</plugin>
