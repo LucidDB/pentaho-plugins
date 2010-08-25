@@ -1122,9 +1122,6 @@ TYPICAL TARGET SEQUENCE
 	          depends="compile,set-build.id,generate.manifest"
 	          description="Jars up the bin directory after a compile">
 	    <jar destfile="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" manifest="${dist.manifest.file}">
-	      <fileset dir="${classes.dir}" >
-            <excludesfile name ="com/dynamobi/pentaho/whlabel/connection/WHLabelDataSourceService.class"/>
-	      </fileset>
 	    </jar>
 	  </target>
 

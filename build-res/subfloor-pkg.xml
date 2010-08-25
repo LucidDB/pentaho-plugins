@@ -80,10 +80,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <attribute name="Implementation-Vendor" value="${impl.vendor}" />
         <attribute name="Implementation-ProductID" value="${impl.productID}" />
       </manifest>
-      <fileset dir="${classes.dir}" />
+      <fileset dir="${classes.dir}" excludes = "**/connection/*"/>
+    </jar>
+  	
+    <jar destfile="${dist.dir}/${ivy.artifact.ds.id}-${project.revision}.jar">
+      <manifest>
+        <attribute name="Implementation-Title" value="${impl.title}" />
+        <attribute name="Implementation-Version" value="${project.revision}.${build.id}" />
+        <attribute name="Implementation-Vendor" value="${impl.vendor}" />
+        <attribute name="Implementation-ProductID" value="${impl.productID}" />
+      </manifest>
+      <fileset dir="${classes.dir}" excludes = "**/client/*, **/server/*, **/*.xml, **/*Generator.class"/>
     </jar>
   </target>
 
+	
   <target name="create-version-file">
     <propertyfile file="${classes.dir}/version.properties" comment="${impl.title} build information">
       <entry key="version" value="${project.revision}.${build.id}" />
