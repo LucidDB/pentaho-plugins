@@ -36,9 +36,15 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+/**
+ * GWT client side class also can be called as the EntryPoint class for building the UI Components
+ * for the WHLabel plugin UI. Also responsible for getting the required values to the displayed 
+ * on the UI.
+ * @author Prasanna
+ *
+ */
 public class WHLabel implements EntryPoint {
 
 	private VerticalPanel mainPanel = new VerticalPanel();
@@ -102,7 +108,8 @@ public class WHLabel implements EntryPoint {
 		
 		cancelButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent bce) {
-				getDWLabel();
+				final String currentSchema = dsListBox.getItemText(dsListBox.getSelectedIndex());
+				getDWLabel(currentSchema);
 			}
 		});
 		
@@ -133,7 +140,7 @@ public class WHLabel implements EntryPoint {
 		String moduleUrl = GWT.getModuleBaseURL();
 		if(moduleUrl.indexOf("content") > -1) {
 			String baseUrl = moduleUrl.substring(0, moduleUrl.indexOf("content"));
-			return  baseUrl + "gwtrpc/labelService";
+			return  baseUrl + "gwtrpc/whLabelService";
 		}
 		return moduleUrl + "gwtrpc";
 	}
@@ -181,7 +188,7 @@ public class WHLabel implements EntryPoint {
         		currSelectedLabel.setText(currSetLabel);
 	        }
 	    };
-	    labelService.getDWLables(currentSchema, callback);
+	    labelService.getDWLabels(currentSchema, callback);
 	}
 
 	private void setDWLabel(String currentSchema, final String selectedLabel) {
@@ -206,7 +213,7 @@ public class WHLabel implements EntryPoint {
 	    labelService.setDWLabel(currentSchema, selectedLabel, callback);
 	}
 
-	private void getDWLabel() {
+	private void getDWLabel(String dsName) {
 		WHLabelServiceAsync labelService = GWT.create(WHLabelService.class);
 	    ServiceDefTarget endpoint = (ServiceDefTarget) labelService;
 	    endpoint.setServiceEntryPoint(getBaseUrl());
@@ -219,7 +226,7 @@ public class WHLabel implements EntryPoint {
 				WHBlindedPopup bpp = new WHBlindedPopup("get Warehouse Label -- " + result, "Set Wareshouse Label", true);
 			}
     	};
-	    labelService.getDWLabel(callback);
+	    labelService.getDWLabel(dsName, callback);
 	}
 
 	

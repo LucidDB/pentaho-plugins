@@ -29,13 +29,17 @@ import org.pentaho.platform.engine.services.solution.SimpleContentGenerator;
 import org.pentaho.platform.plugin.services.pluginmgr.PluginResourceLoader;
 import org.pentaho.platform.util.messages.LocaleHelper;
 
+/**
+ * This is contentGenerator class for loading the HTML file in the WHLabel Plugin resources
+ * @author Prasanna
+ */
 public class WHLabelContentGenerator extends SimpleContentGenerator{
 
 	@Override
 	public void createContent(OutputStream out) throws Exception {
 		try {
 			IPluginResourceLoader ipluginresourceloader = new PluginResourceLoader();
-			String s = ipluginresourceloader.getResourceAsString(WHLabelContentGenerator.class, "resources/Label.html");
+			String s = ipluginresourceloader.getResourceAsString(WHLabelContentGenerator.class, "resources/whLabel.html");
 			out.write(s.getBytes(LocaleHelper.getSystemEncoding()));
 		} catch (Exception e) {
 			e.printStackTrace();

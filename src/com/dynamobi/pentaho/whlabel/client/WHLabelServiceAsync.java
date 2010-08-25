@@ -23,12 +23,11 @@ package com.dynamobi.pentaho.whlabel.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface WHLabelServiceAsync {
-	void getDWLables(AsyncCallback<String[]> callback);
 	void getDataSources(AsyncCallback<String[]> callback);
-	void getDWLables(String dsName, AsyncCallback<String[]> callback);
 	void setDWLabel(String dsName, String labelName,
 			AsyncCallback<Integer> callback);
-	void getDWLabel(AsyncCallback<String> callback);
-
+	void getDWLabels(String dsName, AsyncCallback<String[]> callback);
+	void getDWLabels(AsyncCallback<String[]> callback);
+	void getDWLabel(String dsName, AsyncCallback<String> callback);
 
 }

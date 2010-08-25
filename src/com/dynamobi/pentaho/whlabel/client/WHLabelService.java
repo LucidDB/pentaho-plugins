@@ -24,10 +24,10 @@ import com.google.gwt.user.client.rpc.RemoteService;
 
 //@RemoteServiceRelativePath("service")
 public interface WHLabelService extends RemoteService {
-	String[] getDWLables();
+	String[] getDWLabels();
 	String[] getDataSources();
-	String[] getDWLables(String dsName);
+	String[] getDWLabels(String dsName);
 	int setDWLabel(String dsName, String labelName);
-	String getDWLabel();
+	String getDWLabel(String dsName);
   
 }
