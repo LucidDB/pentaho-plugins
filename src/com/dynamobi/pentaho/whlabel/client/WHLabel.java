@@ -52,7 +52,7 @@ public class WHLabel implements EntryPoint {
 	private HorizontalPanel buttonPanel = new HorizontalPanel();
 	private Button unsetLabelButton = new Button("Unset Label");
 	private Button setLabelButton = new Button("Set Label");
-	private Button cancelButton = new Button("Cancel");
+	//private Button cancelButton = new Button("Cancel");
 	private ListBox dsListBox = new ListBox();
     private WHDataGrid labelTable = new WHDataGrid();
 	private FlexTable buttonTable = new FlexTable();
@@ -106,18 +106,18 @@ public class WHLabel implements EntryPoint {
 			}
 		});
 		
-		cancelButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent bce) {
-				final String currentSchema = dsListBox.getItemText(dsListBox.getSelectedIndex());
-				getDWLabel(currentSchema);
-			}
-		});
-		
+//		cancelButton.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent bce) {
+//				final String currentSchema = dsListBox.getItemText(dsListBox.getSelectedIndex());
+//				getDWLabel(currentSchema);
+//			}
+//		});
+//		
 		buttonTable.setWidget(0, 1, setLabelButton);
-		buttonTable.setWidget(0, 2, cancelButton);
-		buttonTable.getCellFormatter().setStyleName(0, 0, "buttonLeft");
-		buttonTable.getCellFormatter().setStyleName(0, 1, "buttonCenter");
-		buttonTable.getCellFormatter().setStyleName(0, 2, "buttonRight");
+//		buttonTable.setWidget(0, 2, cancelButton);
+		buttonTable.getCellFormatter().setStyleName(0, 0, "buttonRight");
+//		buttonTable.getCellFormatter().setStyleName(0, 1, "buttonCenter");
+		buttonTable.getCellFormatter().setStyleName(0, 2, "buttonLeft");
 		buttonTable.setStyleName("buttonTable");
 		buttonPanel.add(buttonTable);
 		dropDownPanel.add(buttonPanel);
