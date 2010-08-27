@@ -126,6 +126,7 @@ html, body {
 
 .selectAreaWizard .buttonLeft{
   text-align: left;
+  cell-spacing: 2px;
 }
 
 .selectAreaWizard .buttonCenter{
@@ -133,6 +134,7 @@ html, body {
 }
 
 .selectAreaWizard .buttonRight{
+  cell-spacing: 2px;
   text-align: right;
 }
 
