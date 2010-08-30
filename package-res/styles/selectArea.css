@@ -143,5 +143,12 @@ html, body {
   width: 400px;
 }
 
+.selectAreaWizard .button {
+	color: #000;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-bottom: 2px;
+	margin-left: 6px;
+}
 
 /* End Select Analaysis Area Wizard */
