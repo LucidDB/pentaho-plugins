@@ -10,9 +10,10 @@
     <unzip src="${dist.dir}/${package.basename}.zip" dest="${pentaho.solutions.dir}/system" overwrite="true">
     </unzip>
 
-    <copy todir="${pentaho.solutions.dir}">
-      <fileset dir="${basedir}/solutions/" />
+    <copy file="${dist.dir}/${ivy.artifact.ds.id}-${project.revision}.jar"
+    	todir="${pentaho.lib.dir}">
     </copy>
+    
   </target>
 
   <!-- 
