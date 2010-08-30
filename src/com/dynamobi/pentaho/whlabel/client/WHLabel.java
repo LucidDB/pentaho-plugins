@@ -85,7 +85,8 @@ public class WHLabel implements EntryPoint {
 		labelTable.setStyleName("labelTable");
 		dropDownPanel.add(labelTable);
 		buttonTable.setWidget(0, 0, unsetLabelButton);
-
+		unsetLabelButton.setStyleName("button");
+		setLabelButton.setStyleName("button");
 		unsetLabelButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent bce) {
 				String selectedLabel = "null";
