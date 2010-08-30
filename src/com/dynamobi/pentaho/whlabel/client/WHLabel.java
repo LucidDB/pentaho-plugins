@@ -60,9 +60,15 @@ public class WHLabel implements EntryPoint {
 	
 	public void onModuleLoad() {
 		dropDownPanel.setSpacing(20);
-		currSelectedLabel.setWidth("300");
 		setDataSources();
-		dropDownPanel.add(dsListBox);
+		HorizontalPanel currLabelPanel = new HorizontalPanel();
+		currLabelPanel.add(dsListBox);
+		Label spaceLabel = new Label();
+		spaceLabel.setWidth("10");
+		spaceLabel.setText(" ");
+		currLabelPanel.add(spaceLabel);
+		currLabelPanel.add(currSelectedLabel);
+		dropDownPanel.add(currLabelPanel);
 		labelTable.setHeader(0, "Warehouse Label");
 		labelTable.setHeader(1, "Timestamp");
 		labelTable.setHeight("100");
@@ -124,9 +130,8 @@ public class WHLabel implements EntryPoint {
 		mainPanel.add(dropDownPanel);
 		RootPanel.get("description").add(mainPanel);
 		
-		HorizontalPanel currLabelPanel = new HorizontalPanel();
-		currLabelPanel.add(currSelectedLabel);
-		RootPanel.get("warehouseLabel").add(currLabelPanel);
+//		currLabelPanel.add(currSelectedLabel);
+//		RootPanel.get("warehouseLabel").add(currLabelPanel);
 
 		dsListBox.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent arg0) {
@@ -163,7 +168,7 @@ public class WHLabel implements EntryPoint {
 	}
 
 
-	private void updateDWLabels(String currentSchema) {
+	private void updateDWLabels(final String currentSchema) {
     	while (labelTable.getRowCount() > 0)
     		labelTable.removeRow(labelTable.getRowCount()-1);
 		WHLabelServiceAsync labelService = GWT.create(WHLabelService.class);
@@ -184,14 +189,37 @@ public class WHLabel implements EntryPoint {
 	        		labelTable.getCellFormatter().setStyleName(i, 1, "dwTimestampCell");
 	        		labelTable.setVisible(true);
 	        	}
-        		String currSetLabel = "Active Warehouse Label - " + result[result.length-1];
-        		currSelectedLabel.setText(currSetLabel);
+//	        	String currSetLabel = " Active Warehouse Label - " + result[result.length-1];
+	        	setCurrSetLabel(currentSchema);
 	        }
 	    };
 	    labelService.getDWLabels(currentSchema, callback);
 	}
 
-	private void setDWLabel(String currentSchema, final String selectedLabel) {
+	private void setCurrSetLabel(final String dsName) {
+		WHLabelServiceAsync labelService = GWT.create(WHLabelService.class);
+	    ServiceDefTarget endpoint = (ServiceDefTarget) labelService;
+	    endpoint.setServiceEntryPoint(getBaseUrl());
+	    AsyncCallback<String> callback = new AsyncCallback<String>() {
+	    	public void onFailure(Throwable caught) {
+	    		caught.printStackTrace();
+	    	}
+
+			public void onSuccess(String result) {
+				String currLabel = " Active Warehouse Label - ";
+				if (result == null) {
+					currLabel += "unset";
+				} else if (result.equalsIgnoreCase("null")){
+					currLabel += "unset";
+				} else {
+					currLabel += result;
+				}
+				currSelectedLabel.setText(currLabel);
+			}
+    	};
+	    labelService.getDWLabel(dsName, callback);
+	}
+	private void setDWLabel(final String currentSchema, final String selectedLabel) {
 		WHLabelServiceAsync labelService = GWT.create(WHLabelService.class);
 	    ServiceDefTarget endpoint = (ServiceDefTarget) labelService;
 	    endpoint.setServiceEntryPoint(getBaseUrl());
@@ -207,7 +235,8 @@ public class WHLabel implements EntryPoint {
 				else
 					currSetLabel = selectedLabel; 
 				WHBlindedPopup bpp = new WHBlindedPopup("Warehouse Label is set --> " + selectedLabel, "Set Wareshouse Label" , true);
-				currSelectedLabel.setText("Active Warehouse Label - " +currSetLabel);
+				setCurrSetLabel(currentSchema);
+				//currSelectedLabel.setText(" Active Warehouse Label - " +currSetLabel);
 	    	}
 	    };
 	    labelService.setDWLabel(currentSchema, selectedLabel, callback);
