@@ -1,0 +1,54 @@
+/* This css file serves as a template for styling your kwicks.  Feel free to modify, but please make note of the comments - some of them are important. */
+#shell{ margin:auto; padding:0 0 0 0; width:525px;}
+.kwicks {
+	/* recommended styles for kwicks ul container */
+	list-style: none;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+.kwicks li{
+	/* these are required, but the values are up to you (must be pixel) */
+	width: 175px;
+	height: 406px;
+
+	/*do not change these */
+	display: block;
+	overflow: hidden;
+	padding: 0;  /* if you need padding, do so with an inner div (or implement your own box-model hack) */
+}
+.kwicks.horizontal li {
+	/* This is optional and will be disregarded by the script.  However, it should be provided for non-JS enabled browsers. */
+	margin-right:0; /*Set to same as spacing option. */	
+	float: left;
+}
+.kwicks.vertical  li{
+	/* This is optional and will be disregarded by the script.  However, it should be provided for non-JS enabled browsers. */
+	margin-bottom: 0px; /*Set to same as spacing option. */	
+}
+
+#kwick_1 {
+	background:url(Images/pic1_busi.jpg) no-repeat;
+}
+#kwick_2 {
+	background:url(Images/pic3_society.jpg) no-repeat;
+}
+#kwick_3 {
+	background:url(Images/pic2_envir.jpg) no-repeat;
+}
+#kwick_4 { 
+	xbackground-color: #000066;
+}
+.kwicks.horizontal #kwick_3 {
+	margin-right: none; /* cancel margin on last kiwck (if you set a margin above) */
+}
+.kwicks.vertical #kwick_3 {
+	margin-bottom: none; /* cancel margin on last kiwck (if you set a margin above) */
+}
+
+
+
+
+
+
+.clr{ clear:both}

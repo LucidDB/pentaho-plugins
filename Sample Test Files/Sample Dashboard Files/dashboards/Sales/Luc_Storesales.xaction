@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action-sequence> 
+  <title>Store Sales</title>
+  <version>1</version>
+  <logging-level>ERROR</logging-level>
+  <documentation> 
+    <author/>  
+    <description>Empty blank action sequence document</description>  
+    <help/>  
+    <result-type/>  
+    <icon/> 
+  </documentation>
+
+  <inputs/>
+
+  <outputs> 
+    <image-tag type="string"/> 
+  </outputs>
+
+  <resources/>
+  
+  <actions> 
+    <action-definition> 
+      <component-name>SQLLookupRule</component-name>
+      <action-type>Relational</action-type>
+      <action-outputs> 
+        <query-result type="result-set" mapping="query_result"/> 
+      </action-outputs>
+      <component-definition> 
+        <jndi><![CDATA[LucidDB]]></jndi>  
+        <query><![CDATA[SELECT 
+
+STORE_TYPE,
+    sum(WAREHOUSE_SALES) as sales,
+    THE_YEAR
+FROM 
+    FOODMART.STORE,
+    FOODMART.INVENTORY_FACT_1997,
+    FOODMART.TIME_BY_DAY
+WHERE 
+    TIME_BY_DAY.TIME_ID= INVENTORY_FACT_1997.TIME_ID 
+    and STORE.STORE_ID=INVENTORY_FACT_1997.STORE_ID
+    and THE_YEAR       = 1997
+group by STORE_TYPE,THE_YEAR]]></query>  
+        <live><![CDATA[true]]></live> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>ChartComponent</component-name>
+      <action-type>Line Chart</action-type>
+      <action-inputs> 
+        <chart-data type="result-set" mapping="query_result"/> 
+      </action-inputs>
+      <action-outputs> 
+        <image-tag type="string"/> 
+      </action-outputs>
+      <component-definition> 
+        <chart-attributes> 
+          <chart-type>LineChart</chart-type>  
+          <is-3D>true</is-3D>  
+          <domain-label-rotation>.7</domain-label-rotation>  
+          <domain-label-rotation-dir>up</domain-label-rotation-dir>  
+          <is-glass>true</is-glass>  
+          <color-palette> 
+            <color>#0cc1cf</color>  
+            <color>#880a0f</color>  
+            <color>#B09A6B</color>  
+            <color>#772200</color>  
+            <color>#C52F0D</color>  
+            <color>#123D82</color>  
+            <color>#4A0866</color>  
+            <color>#445500</color>  
+            <color>#FFAA00</color>  
+            <color>#1E8AD3</color>  
+            <color>#AA6611</color>  
+            <color>#772200</color>  
+            <color>#8b2834</color> 
+          </color-palette> 
+        </chart-attributes>  
+        <width><![CDATA[400]]></width>  
+        <height><![CDATA[300]]></height> 
+      </component-definition> 
+    </action-definition>
+ 
+  </actions> 
+</action-sequence>

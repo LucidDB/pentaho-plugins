@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdf>
+    <title>Sales</title>
+    <author></author>
+    <description>Sales</description>
+    <icon></icon>
+    <template>template.html</template> 
+       <style>DEMO</style>                                                                                                                                                                                           
+    </cdf>

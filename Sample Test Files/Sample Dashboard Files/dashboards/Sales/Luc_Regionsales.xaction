@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action-sequence> 
+  <title>Region Sales</title>
+  <version>1</version>
+  <logging-level>ERROR</logging-level>
+  <documentation> 
+    <author/>  
+    <description>Empty blank action sequence document</description>  
+    <help/>  
+    <result-type/>  
+    <icon/> 
+  </documentation>
+
+  <inputs/>
+
+  <outputs> 
+    <outputstream> 
+      <destinations> 
+        <response>content</response> 
+      </destinations> 
+    </outputstream> 
+  </outputs>
+
+  <resources> 
+    <pie> 
+      <solution-file> 
+        <location>chartbeans_piechart.xml</location>  
+        <mime-type/> 
+      </solution-file> 
+    </pie> 
+  </resources>
+  
+  <actions> 
+    <action-definition> 
+      <component-name>SQLLookupRule</component-name>
+      <action-type>Relational</action-type>
+      <action-outputs> 
+        <query-result type="result-set" mapping="query_result"/> 
+      </action-outputs>
+      <component-definition> 
+        <jndi><![CDATA[LucidDB]]></jndi>  
+        <query><![CDATA[SELECT 
+    
+    SALES_REGION, 
+   sum( WAREHOUSE_SALES) as sales,
+THE_YEAR
+FROM 
+    FOODMART.STORE,
+    FOODMART.REGION,
+    FOODMART.INVENTORY_FACT_1997,
+    FOODMART.TIME_BY_DAY
+where
+    TIME_BY_DAY.TIME_ID= INVENTORY_FACT_1997.TIME_ID 
+    and STORE.STORE_ID=INVENTORY_FACT_1997.STORE_ID
+and REGION.REGION_ID = STORE.REGION_ID
+and THE_YEAR =1997
+group by SALES_REGION,THE_YEAR]]></query>  
+        <live><![CDATA[true]]></live> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>ChartBeansComponent</component-name>
+      <action-inputs> 
+        <value-column type="string"/>  
+        <category-column type="string"/>  
+        <series-column type="string"/>  
+        <chartdata type="result-set" mapping="query_result"/> 
+      </action-inputs>
+      <action-resources> 
+        <chart-model-xml type="resource" mapping="pie"/> 
+      </action-resources>
+      <action-outputs> 
+        <outputstream/> 
+      </action-outputs>
+      <component-definition/>  
+      <action-name>ChartBeans Vertical Bar Chart</action-name>  
+      <logging-level>DEBUG</logging-level> 
+    </action-definition>
+ 
+  </actions> 
+</action-sequence>

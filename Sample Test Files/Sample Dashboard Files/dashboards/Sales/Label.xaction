@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action-sequence> 
+  <title>Inventory Sales</title>
+  <version>1</version>
+  <logging-level>ERROR</logging-level>
+  <documentation> 
+    <author>Michael D'Amour</author>  
+    <description>%description</description>  
+    <help>just testing...</help>  
+    <result-type>report</result-type>  
+    <icon>JFree-quadrant-budget-hsql.png</icon> 
+  </documentation>
+
+  <inputs> 
+    <output-type type="string"> 
+      <default-value>html</default-value>  
+      <sources> 
+        <request>type</request> 
+      </sources> 
+    </output-type> 
+  </inputs>
+
+  <outputs> 
+    <output type="content"> 
+      <destinations> 
+        <response>content</response> 
+      </destinations> 
+    </output> 
+  </outputs>
+
+  <resources/>
+  
+  <actions> 
+    <action-definition> 
+      <component-name>SQLLookupRule</component-name>
+      <action-type>SQL Query For Report Data</action-type>
+      <action-outputs> 
+        <query-result type="result-set"/> 
+      </action-outputs>
+      <component-definition> 
+        <jndi><![CDATA[LucidDB]]></jndi>  
+        <live>true</live>  
+        <query><![CDATA[SELECT 
+THE_MONTH, 
+STORE_TYPE as THE_DAY,
+THE_YEAR as THE_YEAR,
+sum(WAREHOUSE_SALES) as DAY_OF_MONTH
+ 
+FROM 
+    FOODMART.TIME_BY_DAY, 
+    FOODMART.INVENTORY_FACT_1997,
+    FOODMART.STORE
+WHERE 
+    TIME_BY_DAY.TIME_ID= INVENTORY_FACT_1997.TIME_ID 
+and STORE.STORE_ID = INVENTORY_FACT_1997.STORE_ID
+    and THE_YEAR       = 1997
+    group by THE_MONTH,STORE_TYPE,THE_YEAR]]></query> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>JavascriptRule</component-name>
+      <action-type>JavaScript to Build JFreeReport Definition</action-type>
+      <action-inputs> 
+        <resultset type="result-set" mapping="query-result"/> 
+      </action-inputs>
+      <action-outputs> 
+        <report-definition type="string"/> 
+      </action-outputs>
+      <component-definition> 
+        <script><![CDATA[function getReportDefinition() { 
+	var reportSpec = new Packages.org.pentaho.jfreereport.castormodel.reportspec.ReportSpec();
+	//reportSpec.setUseRowBanding(false);
+	var deptField = new Packages.org.pentaho.jfreereport.castormodel.reportspec.Field();
+			      deptField.setName("THE_MONTH");
+			      deptField.setDisplayName("Month");
+			      deptField.setIsDetail(true);
+			      deptField.setUseItemHide(true);
+				deptField.setFontSize(9);
+				deptField.setFontStyle(4);
+			      reportSpec.addField(deptField);
+
+	var warehouseField= new Packages.org.pentaho.jfreereport.castormodel.reportspec.Field();
+				      warehouseField.setName("THE_DAY");
+				      warehouseField.setDisplayName("Store");
+				      warehouseField.setIsDetail(true);
+  			     		warehouseField.setFontSize(9);
+					warehouseField.setFontStyle(4);	
+	                  	      warehouseField.setHorizontalAlignment("center");
+			      reportSpec.addField(warehouseField);
+var yearField= new Packages.org.pentaho.jfreereport.castormodel.reportspec.Field();
+				      yearField.setName("THE_YEAR");
+				      yearField.setDisplayName("Year");
+				      yearField.setIsDetail(true);
+  			     yearField.setFontSize(9);	
+yearField.setFontStyle(4);
+	                  	      yearField.setHorizontalAlignment("center");
+			      reportSpec.addField(yearField);
+
+var warehouseField= new Packages.org.pentaho.jfreereport.castormodel.reportspec.Field();
+				      warehouseField.setName("DAY_OF_MONTH");
+				      warehouseField.setDisplayName("Sales");
+				      warehouseField.setIsDetail(true);
+warehouseField.setFontStyle(4);	
+  			      warehouseField.setType(Packages.java.sql.Types.NUMERIC);
+			      warehouseField.setExpression("sum");
+	                  	      warehouseField.setHorizontalAlignment("center");
+			      reportSpec.addField(warehouseField);
+ 
+
+	
+			      
+
+reportSpec.setCustomPageFormatWidth(200);
+reportSpec.setOrientation("portrait");
+reportSpec.setColumnHeaderFontSize(10);
+reportSpec.setGroupFooterFontSize(10);
+reportSpec.setPageFormat("CUSTOM");
+	var retStr = Packages.org.pentaho.jfreereport.wizard.utility.report.ReportGenerationUtility.createJFreeReportXML(reportSpec, "UTF-8" );
+	return retStr;
+} 
+	getReportDefinition();]]></script> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>JFreeReportComponent</component-name>
+      <action-type>Create Report Using Query Results</action-type>
+      <action-inputs> 
+        <data type="result-set" mapping="query-result"/>  
+        <report-definition type="string"/> 
+      </action-inputs>
+      <action-resources/>
+      <action-outputs> 
+        <report-output type="content" mapping="output"/> 
+      </action-outputs>
+      <component-definition> 
+        <output-type><![CDATA[html]]></output-type> 
+      </component-definition> 
+    </action-definition>
+ 
+  </actions> 
+</action-sequence>
