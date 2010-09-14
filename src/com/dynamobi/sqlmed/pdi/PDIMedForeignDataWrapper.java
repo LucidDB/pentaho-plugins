@@ -1,9 +1,7 @@
 package com.dynamobi.sqlmed.pdi;
 
-import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverPropertyInfo;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-
 
 import net.sf.farrago.namespace.FarragoMedDataServer;
 import net.sf.farrago.namespace.impl.MedAbstractDataWrapper;
@@ -50,21 +47,15 @@ public class PDIMedForeignDataWrapper extends MedAbstractDataWrapper {
             }
         }
         return null;
-		// TODO Auto-generated method stub
-		//return null;
 	}
 
 	public String getDescription(Locale locale) {
         return "Foreign data wrapper for PDI data";
-		// TODO Auto-generated method stub
-		//return null;
 	}
 
 
 	public String getSuggestedName() {
         return "PDI_DATA_WRAPPER";
-		// TODO Auto-generated method stub
-		//return null;
 	}
 	
 	public DriverPropertyInfo[] getServerPropertyInfo(Locale locale,
@@ -135,14 +126,6 @@ public class PDIMedForeignDataWrapper extends MedAbstractDataWrapper {
             System.arraycopy(driverArray, 0, result, mapArray.length, driverArray.length);
             return result;
         }
-        
-		// TODO Auto-generated method stub
-		//return super.getServerPropertyInfo(locale, wrapperProps, serverProps);
-	}
-	
-    private String[] getArtificialSchemas(PDIMetaData databaseMetaData) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	private Driver loadDriverClass(String driverClassName) {
@@ -157,24 +140,16 @@ public class PDIMedForeignDataWrapper extends MedAbstractDataWrapper {
     }
     
     // gets database names for use as SCHEMA_NAME values
-    private String [] getArtificialSchemas(DatabaseMetaData meta) throws SQLException {
-        // REVIEW hersker 2005-05-31:
-        // Testing with MySQL 5.0 shows that DatabaseMetaData.getSchemas()
-        // returns an empty ResultSet, but DatabaseMetadata.getCatalogs()
-        // returns database names that can be used as schema qualifiers.
-        // Other tested DBs (Oracle 10.2g, SQL Server 2005, PostgreSQL 8.0)
-        // do not need artificial schema names.
+    private String [] getArtificialSchemas(PDIMetaData meta) throws SQLException {
         List<String> list = new ArrayList<String>();
-        ResultSet rs = meta.getCatalogs();
+        PDIIterator iterator = (PDIIterator)meta.getCatalogs();
         try {
-            while (rs.next()) {
-                String name = rs.getString(1);
+            while (iterator.hasNext()) {
+                String name = (String)iterator.next();
                 list.add(name);
             }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
+        }catch(Exception e){
+        	// catch /throw exception
         }
 
         if (list.size() == 0) {

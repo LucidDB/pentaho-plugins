@@ -11,24 +11,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import net.sf.farrago.namespace.FarragoMedNameDirectory;
+import net.sf.farrago.namespace.impl.MedAbstractColumnSet;
+import net.sf.farrago.namespace.impl.MedAbstractDataServer;
+import net.sf.farrago.resource.FarragoResource;
+import net.sf.farrago.trace.FarragoTrace;
+import net.sf.farrago.type.FarragoTypeFactory;
 
-import org.eigenbase.enki.util.JndiUtil;
 import org.eigenbase.relopt.RelOptPlanner;
 import org.eigenbase.reltype.RelDataType;
 import org.eigenbase.sql.SqlUtil;
-import org.eigenbase.util.Util;
-
-import net.sf.farrago.jdbc.engine.FarragoJdbcEngineConnection;
-import net.sf.farrago.namespace.FarragoMedColumnSet;
-import net.sf.farrago.namespace.FarragoMedNameDirectory;
-import net.sf.farrago.namespace.impl.MedAbstractDataServer;
-import net.sf.farrago.resource.FarragoResource;
-import net.sf.farrago.session.FarragoSession;
-import net.sf.farrago.trace.FarragoTrace;
-import net.sf.farrago.type.FarragoTypeFactory;
 
 public class PDIMedDataServer extends MedAbstractDataServer {
 
@@ -83,14 +75,10 @@ public class PDIMedDataServer extends MedAbstractDataServer {
     protected String schemaName;
     protected String [] tableTypes;
     protected String loginTimeout;
-    private int maxIdleConnections;
-    private long evictionTimerPeriodMillis;
-    private long minEvictionIdleMillis;
-
 
     protected boolean supportsMetaData;
     private PDIMetaData databaseMetaData;
-
+    public Properties props;
     protected String validationQuery;
 
     protected boolean useSchemaNameAsForeignQualifier;
@@ -107,13 +95,12 @@ public class PDIMedDataServer extends MedAbstractDataServer {
  
 	protected PDIMedDataServer(String serverMofId, Properties props) {
 		super(serverMofId, props);
-		// TODO Auto-generated constructor stub
 	}
 
 
 	public void initialize() throws Exception {
-        Properties props = getProperties();
-		initializeDataSource();
+        props = getProperties();
+		//initializeDataSource();
 
 		PDIMetaData databaseMetaData = getDatabaseMetaData();
 
@@ -360,50 +347,67 @@ public class PDIMedDataServer extends MedAbstractDataServer {
         list.add(mapping);
     }
 
-    private void initializeDataSource() {
-    	//TODO  Auto-generated method stub
-    }	
+//    private void initializeDataSource() {
+//    	 
+//    }	
 
 	@Override
 	public FarragoMedNameDirectory getNameDirectory() throws SQLException {
-		// TODO Auto-generated method stub
-		return super.getNameDirectory();
+		return new PDIMedNameDirectory(this, schemaName);
 	}
 
 	@Override
 	public void registerRules(RelOptPlanner planner) {
-		// TODO Auto-generated method stub
 		super.registerRules(planner);
+		
 	}
 
 	@Override
 	public void closeAllocation() {
-		// TODO Auto-generated method stub
 		super.closeAllocation();
 	}
 
-	public static void removeNonDriverProps(Properties driverProps) {
-		// TODO Auto-generated method stub
-        // TODO Prasanna 03092010-1:13PM ----  Make this metadata-driven.
-
+	public static void removeNonDriverProps(Properties props) {
+        props.remove(PROP_URL);
+        props.remove(PROP_DRIVER_CLASS);
+        props.remove(PROP_CATALOG_NAME);
+        props.remove(PROP_SCHEMA_NAME);
+        props.remove(PROP_USER_NAME);
+        props.remove(PROP_PASSWORD);
+        props.remove(PROP_EXT_OPTIONS);
+        props.remove(PROP_TABLE_TYPES);
+        props.remove(PROP_LOGIN_TIMEOUT);
+        props.remove(PROP_USE_SCHEMA_NAME_AS_FOREIGN_QUALIFIER);
+        props.remove(PROP_LENIENT);
+        props.remove(PROP_DISABLED_PUSHDOWN_REL_PATTERN);
+        props.remove(PROP_FETCH_SIZE);
+        props.remove(PROP_AUTOCOMMIT);
+        props.remove(PROP_SCHEMA_MAPPING);
+        props.remove(PROP_TABLE_MAPPING);
+        props.remove(PROP_TABLE_PREFIX_MAPPING);
+        props.remove(PROP_JNDI_NAME);
+        props.remove(PROP_MAX_IDLE_CONNECTIONS);
+        props.remove(PROP_EVICTION_TIMER_PERIOD_MILLIS);
+        props.remove(PROP_MIN_EVICTION_IDLE_MILLIS);
+        props.remove(PROP_VALIDATION_TIMING);
+        props.remove(PROP_DISABLE_CONNECTION_POOL);
 	}
 
 
-
-	public FarragoMedColumnSet newColumnSet(String[] arg0, Properties arg1, FarragoTypeFactory arg2, RelDataType arg3, Map<String, Properties> arg4) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public MedAbstractColumnSet newColumnSet(String[] localName, Properties tableProps, 
+			FarragoTypeFactory typeFactory, RelDataType rowType, Map<String, Properties> columnPropMap) throws SQLException {
+		PDIMedNameDirectory directory = (PDIMedNameDirectory)getNameDirectory();
+        return new PDIMedColumnSet(directory, localName, null, rowType, tableProps, columnPropMap);
 	}
 
 
 
 	public PDIMetaData getDatabaseMetaData() {
+        String url = (String)props.get("URL"); // TODO Where should the URL come from?
 
-        assert (databaseMetaData != null);
-
+		if (databaseMetaData == null)
+			initMetaData(url);
         return databaseMetaData;
-		// TODO Auto-generated method stub
-		//return null;
 	}
 
     private boolean isQuoteChar(String mapping, int index) {
@@ -419,25 +423,19 @@ public class PDIMedDataServer extends MedAbstractDataServer {
         return isQuote;
     }
         
-    private void initMetaData()
+    private void initMetaData(String url)
     {
         try {
-            databaseMetaData = getMetaData();
+            databaseMetaData = getMetaData(url);
             supportsMetaData = true;
         } catch (Exception ex) {
             //Util.swallow(ex, logger);
         }
 
         if (databaseMetaData == null) {
-            // driver can't even support getMetaData(); treat it
-            // as brain-damaged
-            databaseMetaData =
-                (PDIMetaData) Proxy.newProxyInstance(
-                    null,
-                    new Class[] { PDIMetaData.class },
-                    new SqlUtil.DatabaseMetaDataInvocationHandler(
-                        "UNKNOWN",
-                        ""));
+            // driver can't even support getMetaData(); treat it as brain-damaged
+            databaseMetaData = (PDIMetaData) Proxy.newProxyInstance(null, new Class[] { PDIMetaData.class }, 
+            		new SqlUtil.DatabaseMetaDataInvocationHandler("UNKNOWN", ""));
             supportsMetaData = false;
         }
     }
@@ -531,11 +529,12 @@ public class PDIMedDataServer extends MedAbstractDataServer {
         }
     }
 
-    private PDIMetaData getMetaData() {
-    	String url = ""; //TODO urlString should be supplied
+    private PDIMetaData getMetaData(String url) {
+//    	String url = ""; urlString should be supplied
     	PDIMetaData metaData = new PDIMetaData(url);
     	return metaData;
-		// TODO Auto-generated method stub
-		//return null;
+
 	}
+
+
 }

@@ -75,34 +75,5 @@ public class URLParser {
 		}
 
 	}
-	
-	public static void main(String[] args) {
-		String url ="a=1&b=2&c=3&d=4&e=5&f=6&g=7";
-		long start = System.currentTimeMillis();
-		ArrayList list = new ArrayList();
-		StringTokenizer st = new StringTokenizer(url,"&");
-		System.out.println(st.countTokens());
-		while(st.hasMoreTokens())
-		{
-			list.add(st.nextToken());
-		}
-		
-		long end = System.currentTimeMillis();
-		System.out.println(end-start);
-		
-		start = System.currentTimeMillis();
-		String tmp = url;
-		list = new ArrayList();
-		int index = tmp.indexOf("&");
-		
-		while(index!=-1)
-		{
-			list.add(tmp.substring(0,index));
-			tmp = tmp.substring(index+1);
-			
-			index = tmp.indexOf("&");
-		}
-		end = System.currentTimeMillis();
-		System.out.println(end-start);
-	}
+
 }
