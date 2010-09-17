@@ -33,7 +33,6 @@ public class PDIUtility {
 			transMeta = new TransMeta(transFile);
 			stepsMeta = transMeta.getSteps();		
 			Trans trans = new Trans(transMeta);
-			trans.execute(null);
 			
 		}catch(KettleException e){
 			e.printStackTrace();
