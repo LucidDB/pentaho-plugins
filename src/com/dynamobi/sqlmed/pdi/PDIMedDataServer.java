@@ -1,5 +1,6 @@
 package com.dynamobi.sqlmed.pdi;
 
+import java.io.File;
 import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -14,6 +16,7 @@ import java.util.regex.Pattern;
 import net.sf.farrago.namespace.FarragoMedNameDirectory;
 import net.sf.farrago.namespace.impl.MedAbstractColumnSet;
 import net.sf.farrago.namespace.impl.MedAbstractDataServer;
+import net.sf.farrago.namespace.impl.MedAbstractDataWrapper;
 import net.sf.farrago.resource.FarragoResource;
 import net.sf.farrago.trace.FarragoTrace;
 import net.sf.farrago.type.FarragoTypeFactory;
@@ -24,111 +27,86 @@ import org.eigenbase.sql.SqlUtil;
 
 public class PDIMedDataServer extends MedAbstractDataServer {
 
-    public static final String PROP_URL = "URL";
-    public static final String PROP_EXT_OPTIONS = "EXTENDED_OPTIONS";
-    public static final String PROP_DRIVER_CLASS = "DRIVER_CLASS";
-    public static final String PROP_USER_NAME = "USER_NAME";
-    public static final String PROP_PASSWORD = "PASSWORD";
-    public static final String PROP_CATALOG_NAME = "QUALIFYING_CATALOG_NAME";
-    public static final String PROP_SCHEMA_NAME = "SCHEMA_NAME";
-    public static final String PROP_JNDI_NAME = "JNDI_NAME";
-    public static final String PROP_LOGIN_TIMEOUT = "LOGIN_TIMEOUT";
-    public static final String PROP_VALIDATION_QUERY = "VALIDATION_QUERY";
-    public static final String PROP_VALIDATION_TIMING = "VALIDATION_TIMING";
-    public static final String PROP_VALIDATION_TIMING_ON_BORROW = "ON_BORROW";
-    public static final String PROP_VALIDATION_TIMING_ON_RETURN = "ON_RETURN";
-    public static final String PROP_VALIDATION_TIMING_WHILE_IDLE = "WHILE_IDLE";
-    public static final String PROP_DISABLE_CONNECTION_POOL = "DISABLE_CONNECTION_POOL";
-    public static final String PROP_USE_SCHEMA_NAME_AS_FOREIGN_QUALIFIER = "USE_SCHEMA_NAME_AS_FOREIGN_QUALIFIER";
-    public static final String PROP_LENIENT = "LENIENT";
-    public static final String PROP_DISABLED_PUSHDOWN_REL_PATTERN = "DISABLED_PUSHDOWN_REL_PATTERN";
-    public static final String PROP_TABLE_TYPES = "TABLE_TYPES";
-    public static final String PROP_FETCH_SIZE = "FETCH_SIZE";
-    public static final String PROP_AUTOCOMMIT = "AUTOCOMMIT";
-    public static final String PROP_MAX_IDLE_CONNECTIONS = "MAX_IDLE_CONNECTIONS";
-    public static final String PROP_EVICTION_TIMER_PERIOD_MILLIS = "EVICTION_TIMER_PERIOD_MILLIS";
-    public static final String PROP_MIN_EVICTION_IDLE_MILLIS = "MIN_EVICTION_IDLE_MILLIS";
-    public static final String PROP_SCHEMA_MAPPING = "SCHEMA_MAPPING";
-    public static final String PROP_TABLE_MAPPING = "TABLE_MAPPING";
-    public static final String PROP_TABLE_PREFIX_MAPPING = "TABLE_PREFIX_MAPPING";
-    
-    
-    public static final boolean DEFAULT_DISABLE_CONNECTION_POOL = false;
-    public static final String DEFAULT_VALIDATION_TIMING = PROP_VALIDATION_TIMING_ON_BORROW;
-    public static final boolean DEFAULT_USE_SCHEMA_NAME_AS_FOREIGN_QUALIFIER = false;
-    public static final boolean DEFAULT_LENIENT = false;
-    public static final String DEFAULT_DISABLED_PUSHDOWN_REL_PATTERN = "";
-    public static final int DEFAULT_FETCH_SIZE = -1;
-    public static final boolean DEFAULT_AUTOCOMMIT = true;
-    public static final int DEFAULT_MAX_IDLE_CONNECTIONS = 1;
-    public static final long DEFAULT_EVICTION_TIMER_PERIOD = -1L;
-    public static final long DEFAULT_MIN_EVICTION_IDLE_MILLIS = -1L;
+	public static final String PROP_PDI_URL = "PDI_URL";
+    public static final String PROP_STEP_TYPE = "STEP_TYPE";
+    public static final String PROP_TRANS_ARGS = "TRANS_ARGS";
+    public static final String DEFAULT_STYPE_TYPE = "ALL";
     
     
     private static final Logger logger = FarragoTrace.getClassTracer(PDIMedDataServer.class);
     
-    protected Properties connectProps;
-    protected String userName;
-    protected String password;
-    protected String url;
-    protected String catalogName;
-    protected String schemaName;
-    protected String [] tableTypes;
-    protected String loginTimeout;
-
-    protected boolean supportsMetaData;
     private PDIMetaData databaseMetaData;
     public Properties props;
-    protected String validationQuery;
 
-    protected boolean useSchemaNameAsForeignQualifier;
-    protected boolean lenient;
-    protected Pattern disabledPushdownPattern;
-    private int fetchSize;
-    protected HashMap<String, Map<String, String>> schemaMaps;
-    protected HashMap<String, Map<String, Source>> tableMaps;
-    protected Map<String, List<WildcardMapping>> tablePrefixMaps;
+  
     
     // JNDI DataSource name
     protected String jndiName;
+    
+    private MedAbstractDataWrapper wrapper;
+    
+    private String pdiUrl=null;
+    private String[] transArgs=null;
 
  
-	protected PDIMedDataServer(String serverMofId, Properties props) {
+	protected PDIMedDataServer(MedAbstractDataWrapper wrapper, 
+			String serverMofId, 
+			Properties props) {
 		super(serverMofId, props);
+		this.wrapper = wrapper;
 	}
 
 
 	public void initialize() throws Exception {
         props = getProperties();
-		//initializeDataSource();
+        
+        pdiUrl = props.getProperty(PROP_PDI_URL);
+        String transArgProp = props.getProperty(PROP_TRANS_ARGS);
+        
+        File transFile = new File(pdiUrl);
+        if(!transFile.exists() && !pdiUrl.equals("")) {
+        	throw FarragoResource.instance().FileNotFound.ex(pdiUrl);
+        }    
+        
+        if(transArgProp!=null) {
+        	if(!transArgProp.contains(",")){
+        		transArgs = new String[1];
+        		transArgs[0] = transArgProp;
+        	}else {
+        		StringTokenizer tokens = new StringTokenizer(transArgProp,",");
+            	transArgs = new String[tokens.countTokens()];
+            	int idx=0;
+            	while(tokens.hasMoreTokens()){
+            		transArgs[idx]=tokens.nextToken();
+            		idx++;
+            	}            		
+        	}
+        	
+        }
+       
+            
 
-		PDIMetaData databaseMetaData = getDatabaseMetaData();
-
-		String schemaMapping = props.getProperty(PROP_SCHEMA_MAPPING);
-		String tableMapping = props.getProperty(PROP_TABLE_MAPPING);
-		String tablePrefixMapping = props.getProperty(PROP_TABLE_PREFIX_MAPPING);
-
-       try {
-           if (((schemaMapping != null) && (tableMapping != null))
-               || ((schemaMapping != null) && (tablePrefixMapping != null))
-               || ((tableMapping != null) && (tablePrefixMapping != null))) {
-               throw FarragoResource.instance().MedJdbc_InvalidTableSchemaMapping.ex();
-           }
-
-           if (schemaMapping != null) {
-               parseMapping(databaseMetaData, schemaMapping, false, false);
-           } else if (tableMapping != null) {
-               parseMapping(databaseMetaData, tableMapping, true, false);
-           } else if (tablePrefixMapping != null) {
-               parseMapping(databaseMetaData, tablePrefixMapping, true, true);
-           }
-       } catch (RuntimeException e) {
-           logger.log(Level.SEVERE, "Error initializing PDIMed mappings", e);
-           closeAllocation();
-           throw e;
-       }
+	}
+	
+	
+	@Override
+	public FarragoMedNameDirectory getNameDirectory() throws SQLException {
+		return null;
 	}
 
+	
+	public MedAbstractColumnSet newColumnSet(String[] localName, 
+			Properties tableProps, 
+			FarragoTypeFactory typeFactory, 
+			RelDataType rowType, 
+			Map<String, Properties> columnPropMap) throws SQLException {
+		PDIMedNameDirectory directory = (PDIMedNameDirectory)getNameDirectory();
+		PDIUtility pdi = new PDIUtility(pdiUrl,transArgs);
+        return new PDIMedColumnSet(directory, localName, null, rowType, tableProps, columnPropMap);
+	}
+	
+	
+	
 	
     private void parseMapping(PDIMetaData databaseMetaData, String mapping,
             boolean isTableMapping, boolean isTablePrefixMapping) {
@@ -256,28 +234,7 @@ public class PDIMedDataServer extends MedAbstractDataServer {
             return;
         }
 
-        if (!key.equals("") && !value.equals("")) {
-            Map<String, String> h = new HashMap<String, String>();
-            if (schemaMaps.get(value) != null) {
-                h = schemaMaps.get(value);
-            }
-            PDIIterator iterator = null;
-            try {
-            	iterator = databaseMetaData.getTables(catalogName, key, null, tableTypes);
-                if (iterator == null) {
-                    return;
-                }
-                while (iterator.hasNext()) {
-                    h.put((String)iterator.next(), key);
-                }
-                schemaMaps.put(value, h);
-            } catch (Throwable ex) {
-                // assume unsupported
-                return;
-            } finally {
-
-            }
-        }
+        
     }
 
     private void createTableMaps(String srcSchema, String srcTable, String targetSchema,
@@ -286,26 +243,7 @@ public class PDIMedDataServer extends MedAbstractDataServer {
             return;
         }
 
-        Map<String, Source> h = tableMaps.get(targetSchema);
-        if (h == null) {
-            h = new HashMap<String, Source>();
-        }
-
-        // validate that the same table name is not mapped to the same schema
-        // name
-        Source src = h.get(targetTable);
-        if (src != null) {
-            // forgive the instance where the same source_schema and
-            // source_table are mapped again
-            if (!src.getSchema().equals(srcSchema) || !src.getTable().equals(srcTable))
-            {
-                throw FarragoResource.instance().MedJdbc_InvalidTableMapping.ex(
-                    src.getSchema(), src.getTable(), srcSchema, srcTable,
-                    targetSchema, targetTable);
-            }
-        }
-        h.put(targetTable, new Source(srcSchema, srcTable));
-        tableMaps.put(targetSchema, h);
+        
     }
 
     
@@ -323,38 +261,14 @@ public class PDIMedDataServer extends MedAbstractDataServer {
             targetTablePrefix = targetTablePrefix.substring(0, targetTablePrefix.length() - 1);
         }
 
-        List<WildcardMapping> list = tablePrefixMaps.get(targetSchema);
-        if (list == null) {
-            list = new ArrayList<WildcardMapping>();
-            tablePrefixMaps.put(targetSchema, list);
-        }
-
-        WildcardMapping mapping = new WildcardMapping(
-                targetTablePrefix, srcSchema, srcTablePrefix);
-
-        for (WildcardMapping m : list) {
-            if (m.targetTablePrefix.equals(targetTablePrefix)) {
-                // forgive the instance where the same source_schema and
-                // souoce_table are mapped again
-                if (!m.getSourceSchema().equals(srcSchema) || !m.getSourceTablePrefix().equals(srcTablePrefix)) {
-                    throw FarragoResource.instance().MedJdbc_InvalidTablePrefixMapping.ex(
-                        m.getSourceSchema(), m.getSourceTablePrefix(), srcSchema, srcTablePrefix,
-                        targetSchema, targetTablePrefix);
-                }
-            }
-        }
-
-        list.add(mapping);
+      
     }
 
 //    private void initializeDataSource() {
 //    	 
 //    }	
 
-	@Override
-	public FarragoMedNameDirectory getNameDirectory() throws SQLException {
-		return new PDIMedNameDirectory(this, schemaName);
-	}
+	
 
 	@Override
 	public void registerRules(RelOptPlanner planner) {
@@ -368,37 +282,11 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 	}
 
 	public static void removeNonDriverProps(Properties props) {
-        props.remove(PROP_URL);
-        props.remove(PROP_DRIVER_CLASS);
-        props.remove(PROP_CATALOG_NAME);
-        props.remove(PROP_SCHEMA_NAME);
-        props.remove(PROP_USER_NAME);
-        props.remove(PROP_PASSWORD);
-        props.remove(PROP_EXT_OPTIONS);
-        props.remove(PROP_TABLE_TYPES);
-        props.remove(PROP_LOGIN_TIMEOUT);
-        props.remove(PROP_USE_SCHEMA_NAME_AS_FOREIGN_QUALIFIER);
-        props.remove(PROP_LENIENT);
-        props.remove(PROP_DISABLED_PUSHDOWN_REL_PATTERN);
-        props.remove(PROP_FETCH_SIZE);
-        props.remove(PROP_AUTOCOMMIT);
-        props.remove(PROP_SCHEMA_MAPPING);
-        props.remove(PROP_TABLE_MAPPING);
-        props.remove(PROP_TABLE_PREFIX_MAPPING);
-        props.remove(PROP_JNDI_NAME);
-        props.remove(PROP_MAX_IDLE_CONNECTIONS);
-        props.remove(PROP_EVICTION_TIMER_PERIOD_MILLIS);
-        props.remove(PROP_MIN_EVICTION_IDLE_MILLIS);
-        props.remove(PROP_VALIDATION_TIMING);
-        props.remove(PROP_DISABLE_CONNECTION_POOL);
+        
 	}
 
 
-	public MedAbstractColumnSet newColumnSet(String[] localName, Properties tableProps, 
-			FarragoTypeFactory typeFactory, RelDataType rowType, Map<String, Properties> columnPropMap) throws SQLException {
-		PDIMedNameDirectory directory = (PDIMedNameDirectory)getNameDirectory();
-        return new PDIMedColumnSet(directory, localName, null, rowType, tableProps, columnPropMap);
-	}
+	
 
 
 
@@ -427,7 +315,6 @@ public class PDIMedDataServer extends MedAbstractDataServer {
     {
         try {
             databaseMetaData = getMetaData(url);
-            supportsMetaData = true;
         } catch (Exception ex) {
             //Util.swallow(ex, logger);
         }
@@ -436,32 +323,11 @@ public class PDIMedDataServer extends MedAbstractDataServer {
             // driver can't even support getMetaData(); treat it as brain-damaged
             databaseMetaData = (PDIMetaData) Proxy.newProxyInstance(null, new Class[] { PDIMetaData.class }, 
             		new SqlUtil.DatabaseMetaDataInvocationHandler("UNKNOWN", ""));
-            supportsMetaData = false;
         }
     }
     
 
-	/**
-     * Retrieves the configured user name for this data server. Subclasses may
-     * override this method to obtain the user name from an alternate source.
-     *
-     * @return user name for this data server
-     */
-    protected String getUserName()
-    {
-        return userName;
-    }
-
-    /**
-     * Retrieves the configured password for this data server. Subclasses may
-     * override this method to obtain the password from an alternate source.
-     *
-     * @return password for this data server
-     */
-    protected String getPassword()
-    {
-        return password;
-    }
+	
 
     
     //~ Inner Classes ----------------------------------------------------------
