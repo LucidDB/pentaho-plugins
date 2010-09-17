@@ -57,17 +57,20 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 	}
 
 
-	public void initialize() throws Exception {
+	public void initialize() throws SQLException {
         props = getProperties();
         
         pdiUrl = props.getProperty(PROP_PDI_URL);
         String transArgProp = props.getProperty(PROP_TRANS_ARGS);
         
-        File transFile = new File(pdiUrl);
-        if(!transFile.exists() && !pdiUrl.equals("")) {
-        	throw FarragoResource.instance().FileNotFound.ex(pdiUrl);
-        }    
-        
+        if(pdiUrl!=null) {
+	        File transFile = new File(pdiUrl);
+	        
+	        if(!transFile.exists() && !pdiUrl.equals("")) {
+	        	throw FarragoResource.instance().FileNotFound.ex(pdiUrl);
+	        } 
+        }
+       
         if(transArgProp!=null) {
         	if(!transArgProp.contains(",")){
         		transArgs = new String[1];

@@ -83,8 +83,6 @@ public class PDIHelper {
 			if (f.getName().lastIndexOf("ktr") != -1) {
 
 				TransMeta tm = new TransMeta(f.getAbsolutePath());
-//				TransMeta tm = new TransMeta("file://E:\\project\\kettlejdbc-google\\trunk\\samples\\simple.ktr");
-				// System.out.println(java.util.Arrays.toString(tm.getStepNames()));
 				String name = f.getName();
 				name = name.substring(0, name.length() - 4);
 				stepsMap.put(name, tm.getStepNames());
@@ -124,16 +122,7 @@ public class PDIHelper {
 	
 	private static void parse()
 	{
-		String vfsFilename ="file://E:\\project\\kettlejdbc-google\\trunk\\samples\\simple.ktr";
-		Document doc=null;
-        try
-        {
-            doc = XMLHandler.loadXMLFile(KettleVFS.getFileObject(vfsFilename));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+		
 	}
 	
 	private static int translateType (int kettleType){
