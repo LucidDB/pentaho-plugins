@@ -14,7 +14,7 @@ import org.pentaho.di.core.row.ValueMetaInterface;
 
 public class PDIMetaData {
 
-	public final static String driverPrefix = "jdbc:kettle:";
+	public final static String driverPrefix = "";
 	public static final String TABLE_TYPE_TABLE ="TABLE";
 	public static final String TABLE_TYPE_VIEW ="VIEW";
 
