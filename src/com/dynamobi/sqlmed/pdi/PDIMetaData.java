@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import net.sf.farrago.trace.FarragoTrace;
 
 import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.row.RowMeta;
@@ -17,7 +21,7 @@ public class PDIMetaData {
 	public final static String driverPrefix = "";
 	public static final String TABLE_TYPE_TABLE ="TABLE";
 	public static final String TABLE_TYPE_VIEW ="VIEW";
-
+    private static final Logger logger = FarragoTrace.getClassTracer(PDIMetaData.class);
 	
 	Map<String, String[]> stepsMap = null;
 	boolean isDir = false;
@@ -25,7 +29,7 @@ public class PDIMetaData {
 	
 	public PDIMetaData(String url) {
 		super();
-		
+        logger.log(Level.SEVERE, "################ in Constructor PDIMetaData()");
 		String kettleurl = url.substring(url.indexOf(driverPrefix) + driverPrefix.length());
 		URLParser p = new URLParser();
 		p.parse(kettleurl);
@@ -49,16 +53,19 @@ public class PDIMetaData {
 	}
 	
 	public PDIIterator getTables(String catalogName, String key, Object object, String[] tableTypes) {
+        logger.log(Level.SEVERE, "################ in method PDIMetaData.getTables()");
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getSchemaTerm() {
+        logger.log(Level.SEVERE, "################ in method PDIMetaData.getSchemaTerm()");
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public PDIIterator getCatalogs() {
+        logger.log(Level.SEVERE, "################ in method PDIMetaData.getCatalogs()");
 		List<RowMetaAndData> rowAndDatas = new ArrayList<RowMetaAndData>();
 		// if USE_TRANSNAME_AS_SCHEMA is true, then we use the filename or
 		// transformation name as the schema
@@ -83,6 +90,7 @@ public class PDIMetaData {
 	
 	public PDIIterator getColumns(String catalog, String schemaPattern,
 			String tableNamePattern, String columnNamePattern) {
+        logger.log(Level.SEVERE, "################ in method PDIMetaData.getColumns()");
 		List<RowMetaAndData> rowAndDatas = new ArrayList<RowMetaAndData>();
 		RowMeta rm = helper.getRowMeta(tableNamePattern);
 		String[] columns = rm.getFieldNames();
@@ -117,6 +125,7 @@ public class PDIMetaData {
 	}
 	
 	public PDIIterator getSchemas() {
+        logger.log(Level.SEVERE, "################ in method PDIMetaData.getSchemas()");
 		List<RowMetaAndData> rowAndDatas = new ArrayList<RowMetaAndData>();
 		// if USE_TRANSNAME_AS_SCHEMA is true, then we use the filename or
 		// transformation name as the schema
@@ -137,7 +146,7 @@ public class PDIMetaData {
 	public PDIIterator getTables(String catalog, String schemaPattern,
 			String tableNamePattern, String[] types) {
 		List<RowMetaAndData> rowAndDatas = new ArrayList<RowMetaAndData>();
-
+        logger.log(Level.SEVERE, "################ in method PDIMetaData.getTables()");
 		if (!isDir) {
 			Set tables = this.stepsMap.entrySet();
 			for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
@@ -191,6 +200,7 @@ public class PDIMetaData {
 	}
 	
 	public PDIIterator convertToPDIIterator(List rowAndDatas) {
+        logger.log(Level.SEVERE, "################ in method PDIMetaData.convertToPDIIterator()");
 		//TODO 
 		return null;
 	}

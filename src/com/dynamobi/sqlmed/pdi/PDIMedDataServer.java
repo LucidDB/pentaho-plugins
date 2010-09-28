@@ -5,6 +5,7 @@ import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -13,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import net.sf.farrago.namespace.FarragoMedMetadataQuery;
 import net.sf.farrago.namespace.FarragoMedNameDirectory;
 import net.sf.farrago.namespace.impl.MedAbstractColumnSet;
 import net.sf.farrago.namespace.impl.MedAbstractDataServer;
@@ -44,7 +46,7 @@ public class PDIMedDataServer extends MedAbstractDataServer {
     protected String jndiName;
     
     private MedAbstractDataWrapper wrapper;
-    
+    PDIKtrFileParams params;
     private String pdiUrl=null;
     private String[] transArgs=null;
 
@@ -54,15 +56,24 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 			Properties props) {
 		super(serverMofId, props);
 		this.wrapper = wrapper;
+        Iterator iterator = props.keySet().iterator();
+        logger.log(Level.SEVERE, "################ in Constructor PDIMedDataServer(String, Properties)");
+        while (iterator.hasNext()) {
+        	logger.log(Level.SEVERE, "################ Iterator value " + iterator.next());
+        }
 	}
 
 
 	public void initialize() throws SQLException {
+        params = new PDIKtrFileParams(getProperties());
+        params.decode();
         props = getProperties();
-        
+        logger.log(Level.SEVERE, "################ in method PDIMedDataServer.initialize()");
         pdiUrl = props.getProperty(PROP_PDI_URL);
         String transArgProp = props.getProperty(PROP_TRANS_ARGS);
         
+        logger.log(Level.SEVERE, "################ pdiUrl = " + pdiUrl);
+        logger.log(Level.SEVERE, "################ transArgProp = " + transArgProp);
         if(pdiUrl!=null) {
 	        File transFile = new File(pdiUrl);
 	        
@@ -94,7 +105,8 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 	
 	@Override
 	public FarragoMedNameDirectory getNameDirectory() throws SQLException {
-		return null;
+        logger.log(Level.SEVERE, "################ in method PDIMedDataServer.getNameDirectory()");
+        return new PDIMedNameDirectory(this, FarragoMedMetadataQuery.OTN_SCHEMA);
 	}
 
 	
@@ -103,17 +115,16 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 			FarragoTypeFactory typeFactory, 
 			RelDataType rowType, 
 			Map<String, Properties> columnPropMap) throws SQLException {
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.newColumnSet()");
 		PDIMedNameDirectory directory = (PDIMedNameDirectory)getNameDirectory();
 		PDIUtility pdi = new PDIUtility(pdiUrl,transArgs);
         return new PDIMedColumnSet(directory, localName, null, rowType, tableProps, columnPropMap);
 	}
 	
 	
-	
-	
     private void parseMapping(PDIMetaData databaseMetaData, String mapping,
             boolean isTableMapping, boolean isTablePrefixMapping) {
-        
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.parseMapping()");
     	if (!isTableMapping) {
             // Force valid parameters.
             isTablePrefixMapping = false;
@@ -233,6 +244,7 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 
 
     private void createSchemaMaps(PDIMetaData databaseMetaData, String key, String value) {
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.createSchemaMaps()");
         if ((key == null) || (value == null)) {
             return;
         }
@@ -242,7 +254,8 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 
     private void createTableMaps(String srcSchema, String srcTable, String targetSchema,
             String targetTable) {
-        if ((srcSchema == null) || (srcTable == null) || (targetSchema == null) || (targetTable == null)) {
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.createTableMaps()");
+    	if ((srcSchema == null) || (srcTable == null) || (targetSchema == null) || (targetTable == null)) {
             return;
         }
 
@@ -251,7 +264,8 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 
     
     private void createTablePrefixMaps(String srcSchema, String srcTablePrefix, String targetSchema,
-        String targetTablePrefix) {
+    	String targetTablePrefix) {
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.createTablePrefixMaps()");
         if ((srcSchema == null) || (srcTablePrefix == null) || (targetSchema == null) || (targetTablePrefix == null)) {
             return;
         }
@@ -275,17 +289,19 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 
 	@Override
 	public void registerRules(RelOptPlanner planner) {
-		super.registerRules(planner);
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.registerRules()");
+        super.registerRules(planner);
 		
 	}
 
 	@Override
 	public void closeAllocation() {
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.closeAllocation()");
 		super.closeAllocation();
 	}
 
 	public static void removeNonDriverProps(Properties props) {
-        
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.removeNonDriverProps()");
 	}
 
 
@@ -294,7 +310,8 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 
 
 	public PDIMetaData getDatabaseMetaData() {
-        String url = (String)props.get("URL"); // TODO Where should the URL come from?
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.getDatabaseMetaData()");
+		String url = (String)props.get("URL"); // TODO Where should the URL come from?
 
 		if (databaseMetaData == null)
 			initMetaData(url);
@@ -302,7 +319,8 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 	}
 
     private boolean isQuoteChar(String mapping, int index) {
-        boolean isQuote = false;
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.isQuoteChar()");
+    	boolean isQuote = false;
 
         for (int i = index; i < mapping.length(); i++) {
             if (mapping.charAt(i) == '"') {
@@ -316,6 +334,7 @@ public class PDIMedDataServer extends MedAbstractDataServer {
         
     private void initMetaData(String url)
     {
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.initMetaData()");
         try {
             databaseMetaData = getMetaData(url);
         } catch (Exception ex) {
@@ -400,6 +419,7 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 
     private PDIMetaData getMetaData(String url) {
 //    	String url = ""; urlString should be supplied
+        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.getNameDirectory()");
     	PDIMetaData metaData = new PDIMetaData(url);
     	return metaData;
 
