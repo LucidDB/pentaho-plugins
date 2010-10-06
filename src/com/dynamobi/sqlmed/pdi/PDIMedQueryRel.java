@@ -31,13 +31,16 @@ public class PDIMedQueryRel extends TableAccessRelBase implements FennelRel {
 			RelOptTable table, RelOptConnection connection) {
 		super(cluster, traits, table, connection);
 		// TODO Auto-generated constructor stub
-		this.columnSet = columnSet;
+		logger.log(Level.SEVERE, "################ in Constructor PDIMedQueryRel() -->  columnSet" + columnSet);
+		logger.log(Level.SEVERE, "################ in Constructor PDIMedQueryRel() --> connection " + connection);
+		logger.log(Level.SEVERE, "################ in Constructor PDIMedQueryRel() --> cluster " + cluster);
+        this.columnSet = columnSet;
 		this.connection = connection;
 		this.cluster = cluster;
-        logger.log(Level.SEVERE, "################ in Constructor PDIMedQueryRel()");
+        logger.log(Level.SEVERE, "################ end Constructor PDIMedQueryRel()");
 	}
 
-	public RelFieldCollation[] getCollations() {
+	public RelFieldCollation[] getCollations() { 
         logger.log(Level.SEVERE, "################ in method PDIMedQueryRel.getCollations()");
 		// TODO Auto-generated method stub
 		return null;

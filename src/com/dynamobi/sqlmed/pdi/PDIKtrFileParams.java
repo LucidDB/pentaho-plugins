@@ -149,6 +149,7 @@ public class PDIKtrFileParams extends MedAbstractBase{
         if ((type == null) && queryDefault) {
         	type = SchemaType.QUERY;
         }
+    	logger.log(Level.SEVERE, "################ in method PDIKtrFileParams.getSchemaType() "+ "type" +type);
         return type;
 	}
 

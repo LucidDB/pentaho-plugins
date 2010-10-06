@@ -3,16 +3,12 @@ package com.dynamobi.sqlmed.pdi;
 import java.io.File;
 import java.lang.reflect.Proxy;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import net.sf.farrago.namespace.FarragoMedMetadataQuery;
 import net.sf.farrago.namespace.FarragoMedNameDirectory;
@@ -33,8 +29,12 @@ public class PDIMedDataServer extends MedAbstractDataServer {
     public static final String PROP_STEP_TYPE = "STEP_TYPE";
     public static final String PROP_TRANS_ARGS = "TRANS_ARGS";
     public static final String DEFAULT_STYPE_TYPE = "ALL";
-    
-    
+    public static final String PROP_SCHEMA_NAME = "FOREIGN_SCHEMA_NAME";
+    public static final String PROP_TABLE_NAME = "FOREIGN_TABLE_NAME";
+    public static final String PROP_ROW_COUNT = "ROW_COUNT";
+    public static final String PROP_SCHEMA_MAPPING = "SCHEMA_MAPPING";
+    public static final String PROP_TABLE_MAPPING = "TABLE_MAPPING";
+    public static final String PROP_TABLE_PREFIX_MAPPING = "TABLE_PREFIX_MAPPING";
     private static final Logger logger = FarragoTrace.getClassTracer(PDIMedDataServer.class);
     
     private PDIMetaData databaseMetaData;
@@ -97,7 +97,32 @@ public class PDIMedDataServer extends MedAbstractDataServer {
         	}
         	
         }
-       
+        
+        String schemaMapping = props.getProperty(PROP_SCHEMA_MAPPING);
+        String tableMapping = props.getProperty(PROP_TABLE_MAPPING);
+
+        String tablePrefixMapping = props.getProperty(PROP_TABLE_PREFIX_MAPPING);
+        try {
+            if (((schemaMapping != null) && (tableMapping != null))
+                || ((schemaMapping != null) && (tablePrefixMapping != null))
+                || ((tableMapping != null) && (tablePrefixMapping != null)))
+            {
+                throw FarragoResource.instance()
+                .MedJdbc_InvalidTableSchemaMapping.ex();
+            }
+
+            if (schemaMapping != null) {
+                parseMapping(databaseMetaData, schemaMapping, false, false);
+            } else if (tableMapping != null) {
+                parseMapping(databaseMetaData, tableMapping, true, false);
+            } else if (tablePrefixMapping != null) {
+                parseMapping(databaseMetaData, tablePrefixMapping, true, true);
+            }
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error initializing MedJdbc mappings", e);
+            closeAllocation();
+            throw e;
+        }
             
 
 	}
@@ -115,16 +140,18 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 			FarragoTypeFactory typeFactory, 
 			RelDataType rowType, 
 			Map<String, Properties> columnPropMap) throws SQLException {
-        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.newColumnSet()");
+        logger.log(Level.SEVERE, "################ in method PDIMedDataServer.newColumnSet()");
 		PDIMedNameDirectory directory = (PDIMedNameDirectory)getNameDirectory();
+        logger.log(Level.SEVERE, "################ in method PDIMedDataServer.newColumnSet() -----> Done with getNameDirectory");
 		PDIUtility pdi = new PDIUtility(pdiUrl,transArgs);
-        return new PDIMedColumnSet(directory, localName, null, rowType, tableProps, columnPropMap);
+        String[] foreignName = new String[] { null, getForeignSchemaName(), getForeignTableName() };
+        return new PDIMedColumnSet(directory, localName, foreignName, rowType, tableProps, columnPropMap);
 	}
 	
 	
     private void parseMapping(PDIMetaData databaseMetaData, String mapping,
             boolean isTableMapping, boolean isTablePrefixMapping) {
-        logger.log(Level.SEVERE, "################ in method FlatFileDataServer.parseMapping()");
+        logger.log(Level.SEVERE, "################ in method PDIMedDataServer.parseMapping()");
     	if (!isTableMapping) {
             // Force valid parameters.
             isTablePrefixMapping = false;
@@ -424,6 +451,17 @@ public class PDIMedDataServer extends MedAbstractDataServer {
     	return metaData;
 
 	}
+
+
+    String getForeignSchemaName()
+    {
+        return getProperties().getProperty(PROP_SCHEMA_NAME);
+    }
+
+    String getForeignTableName()
+    {
+        return getProperties().getProperty(PROP_TABLE_NAME);
+    }
 
 
 }

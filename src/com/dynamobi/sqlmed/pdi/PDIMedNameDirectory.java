@@ -25,11 +25,10 @@ public class PDIMedNameDirectory extends MedAbstractNameDirectory {
 	}
 	
 	public PDIMedNameDirectory(PDIMedDataServer pdiMedDataServer, String scope) {
-	    logger.log(Level.SEVERE, "################ in Constructor PDIMedNameDirectory(...,...)");
-	    logger.log(Level.SEVERE, "################ pdiMedDataServer = " + pdiMedDataServer);
-	    logger.log(Level.SEVERE, "################ scope " + scope);
+	    logger.log(Level.SEVERE, "################ pdiMedDataServer = " + pdiMedDataServer + " scope " + scope);
         this.server = pdiMedDataServer;
         this.scope = scope;
+	    logger.log(Level.SEVERE, "################ Done --- Constructor PDIMedNameDirectory(...,...)");
         // TODO Auto-generated method stub		
 	}
 
