@@ -104,10 +104,10 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 			fileName = getTableName(localName);
 		}
 		
-		/*String ktrFilePath = params.getDirectory() + fileName
-            				+ params.getFileExtenstion();*/
+		String ktrFilePath = params.getDirectory() + fileName
+            				+ params.getFileExtenstion();
 		
-		String ktrFilePath = "d:/test/testtrans.ktr";
+	//	String ktrFilePath = "d:/test/testtrans.ktr";
 		
 		if(rowType == null) {
 			return null;
