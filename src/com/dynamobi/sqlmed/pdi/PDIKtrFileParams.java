@@ -15,8 +15,11 @@ import net.sf.farrago.trace.FarragoTrace;
 
 public class PDIKtrFileParams extends MedAbstractBase{
 	
-    public static final String PROP_PDI_URL = "PDI_URL";
+    public static final String PROP_DIRECTORY = "DIRECTORY";
+    public static final String PROP_KTR_FILE = "KTR_FILE";
     public static final String PROP_FILE_EXTENSION = "FILE_EXTENSION";
+    protected static final int DEFAULT_NUM_ROWS_SCAN = 5;
+
 
     
     protected static final String DEFAULT_FILE_EXTENSION = "ktr";
@@ -24,6 +27,7 @@ public class PDIKtrFileParams extends MedAbstractBase{
     
     private Properties props;
     private String directory;
+    private String ktrFile;
     private String fileExtension;
     
     private static final Logger logger = FarragoTrace.getClassTracer(PDIKtrFileParams.class);
@@ -39,7 +43,7 @@ public class PDIKtrFileParams extends MedAbstractBase{
 
         /**
          * Schema name for a special type of query that returns parsed text
-         * columns (including headers) as they appear in a text file. Sample
+         * columns (including headers) as they appear in a ktr file. Sample
          * queries are limited to a specified number of rows
          */
         SAMPLE("SAMPLE"),
@@ -48,7 +52,7 @@ public class PDIKtrFileParams extends MedAbstractBase{
          * Schema name for a typical query, in which columns are casted to typed
          * data
          */
-        QUERY(new String[] { "BCP", "DEFAULT" }),
+        QUERY(new String[] { "PDI", "DEFAULT" }),
 
         /**
          * Schema name for a query in which columns are returned as text.
@@ -60,7 +64,6 @@ public class PDIKtrFileParams extends MedAbstractBase{
         private static Map<String, SchemaType> types;
 
         static {
-            logger.log(Level.SEVERE, "################ in PDIKtrFileParams  Static Types");
             types = new HashMap<String, SchemaType>();
             for (SchemaType type : SchemaType.values()) {
                 for (String name : type.schemaNames) {
@@ -71,7 +74,6 @@ public class PDIKtrFileParams extends MedAbstractBase{
 
         public static SchemaType getSchemaType(String schemaName)
         {
-            logger.log(Level.SEVERE, "################ in PDIKtrFileParams.getSchemaType(schemaName)" + schemaName);      	
             return types.get(schemaName);
         }
 
@@ -80,35 +82,28 @@ public class PDIKtrFileParams extends MedAbstractBase{
 
         private SchemaType(String schemaName)
         {
-            logger.log(Level.SEVERE, "################ in PDIKtrFileParams.SchemaType(schemaName)" + schemaName);   
             this.schemaName = schemaName;
             this.schemaNames = new String[] { schemaName };
         }
 
         private SchemaType(String [] schemaNames)
         {
-            logger.log(Level.SEVERE, "################ in PDIKtrFileParams.SchemaType(schemaName)" + schemaNames.length);   
-            for (int i = 0; i < schemaNames.length; i++) {
-            	logger.log(Level.SEVERE, "################ Iterator value " + schemaNames[i]);
-            }
             this.schemaName = schemaNames[0];
             this.schemaNames = schemaNames;
         }
 
         public String getSchemaName()
         {
-            logger.log(Level.SEVERE, "################ in PDIKtrFileParams.getSchemaName(schemaName)" + schemaName);   
         	return schemaName;
         }
     }
     public PDIKtrFileParams(Properties props) {
-        logger.log(Level.SEVERE, "################ in Constructor PDIKtrFileParams " + props);   
         this.props = props;
     }
 
 	public void decode() throws SQLException {
-        logger.log(Level.SEVERE, "################ in method PDIKtrFileParams.decode() ");   
-        directory = decodeDirectory(props.getProperty(PROP_PDI_URL, null));
+		directory = decodeDirectory(props.getProperty(PROP_DIRECTORY, null));	
+		ktrFile = decodeKtrFile(props.getProperty(PROP_KTR_FILE));
         fileExtension = decodeExtension(props.getProperty(PROP_FILE_EXTENSION, DEFAULT_FILE_EXTENSION));
     	
     	
@@ -116,7 +111,6 @@ public class PDIKtrFileParams extends MedAbstractBase{
     
     
     private String decodeDirectory(String directory) {
-        logger.log(Level.SEVERE, "################ in method PDIKtrFileParams.decodeDirectory() "+ "directory = " +directory);      
         if (directory == null) {
             return "";
         }
@@ -126,8 +120,17 @@ public class PDIKtrFileParams extends MedAbstractBase{
         return directory + File.separator;
     }
     
+    private String decodeKtrFile(String ktrFile) {
+    	if(ktrFile == null) {
+    		return "";
+    	}
+    	if(ktrFile.endsWith(".ktr")){
+    		return ktrFile;
+    	}
+    	return ktrFile;
+    }
+    
     private String decodeExtension(String extension) {
-        logger.log(Level.SEVERE, "################ in method PDIKtrFileParams.decodeExtension() "+ "extension = " +extension);      
         Util.pre(extension != null, "extension != null");
         if ((extension.length() == 0) || extension.startsWith(FILE_EXTENSION_PREFIX)) {
             return extension;
@@ -138,18 +141,20 @@ public class PDIKtrFileParams extends MedAbstractBase{
     public String getDirectory() {
         return directory;
     }
+    
+    public String getKtrFile() {
+    	return ktrFile;
+    }
 
     public String getFileExtenstion() {
         return fileExtension;
     }
     
     public static SchemaType getSchemaType(String schemaName, boolean queryDefault) {
-    	logger.log(Level.SEVERE, "################ in method PDIKtrFileParams.getSchemaType() "+ "schemaName = " +schemaName + " queryDefault= "+queryDefault);
         SchemaType type = SchemaType.getSchemaType(schemaName); 
         if ((type == null) && queryDefault) {
         	type = SchemaType.QUERY;
         }
-    	logger.log(Level.SEVERE, "################ in method PDIKtrFileParams.getSchemaType() "+ "type" +type);
         return type;
 	}
 
