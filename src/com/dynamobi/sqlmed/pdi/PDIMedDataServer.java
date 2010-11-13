@@ -51,80 +51,35 @@ public class PDIMedDataServer extends MedAbstractDataServer {
     private String[] transArgs=null;
 
  
-	protected PDIMedDataServer(MedAbstractDataWrapper wrapper, 
+	PDIMedDataServer(MedAbstractDataWrapper wrapper, 
 			String serverMofId, 
 			Properties props) {
 		super(serverMofId, props);
 		this.wrapper = wrapper;
-        Iterator iterator = props.keySet().iterator();
-        logger.log(Level.SEVERE, "################ in Constructor PDIMedDataServer(String, Properties)");
-        while (iterator.hasNext()) {
-        	logger.log(Level.SEVERE, "################ Iterator value " + iterator.next());
-        }
 	}
 
 
 	public void initialize() throws SQLException {
         params = new PDIKtrFileParams(getProperties());
         params.decode();
-        props = getProperties();
+
         logger.log(Level.SEVERE, "################ in method PDIMedDataServer.initialize()");
-        pdiUrl = props.getProperty(PROP_PDI_URL);
-        String transArgProp = props.getProperty(PROP_TRANS_ARGS);
         
-        logger.log(Level.SEVERE, "################ pdiUrl = " + pdiUrl);
-        logger.log(Level.SEVERE, "################ transArgProp = " + transArgProp);
-        if(pdiUrl!=null) {
-	        File transFile = new File(pdiUrl);
+        File dir = new File(params.getDirectory());
+        if (!dir.exists() && !params.getDirectory().equals("")) {
+            throw FarragoResource.instance().InvalidDirectory.ex(
+                params.getDirectory());
+        }
+        
+        String ktrFile = params.getKtrFile();
+        
+        if(ktrFile!=null) {
+	        File transFile = new File(ktrFile);
 	        
-	        if(!transFile.exists() && !pdiUrl.equals("")) {
-	        	throw FarragoResource.instance().FileNotFound.ex(pdiUrl);
+	        if(!transFile.exists() && !ktrFile.equals("")) {
+	        	throw FarragoResource.instance().FileNotFound.ex(ktrFile);
 	        } 
         }
-       
-        if(transArgProp!=null) {
-        	if(!transArgProp.contains(",")){
-        		transArgs = new String[1];
-        		transArgs[0] = transArgProp;
-        	}else {
-        		StringTokenizer tokens = new StringTokenizer(transArgProp,",");
-            	transArgs = new String[tokens.countTokens()];
-            	int idx=0;
-            	while(tokens.hasMoreTokens()){
-            		transArgs[idx]=tokens.nextToken();
-            		idx++;
-            	}            		
-        	}
-        	
-        }
-        
-        String schemaMapping = props.getProperty(PROP_SCHEMA_MAPPING);
-        String tableMapping = props.getProperty(PROP_TABLE_MAPPING);
-
-        String tablePrefixMapping = props.getProperty(PROP_TABLE_PREFIX_MAPPING);
-        try {
-            if (((schemaMapping != null) && (tableMapping != null))
-                || ((schemaMapping != null) && (tablePrefixMapping != null))
-                || ((tableMapping != null) && (tablePrefixMapping != null)))
-            {
-                throw FarragoResource.instance()
-                .MedJdbc_InvalidTableSchemaMapping.ex();
-            }
-
-            if (schemaMapping != null) {
-                parseMapping(databaseMetaData, schemaMapping, false, false);
-            } else if (tableMapping != null) {
-                parseMapping(databaseMetaData, tableMapping, true, false);
-            } else if (tablePrefixMapping != null) {
-                parseMapping(databaseMetaData, tablePrefixMapping, true, true);
-            }
-        } catch (RuntimeException e) {
-            logger.log(Level.SEVERE, "Error initializing MedJdbc mappings", e);
-            closeAllocation();
-            throw e;
-        }
-            
-
 	}
 	
 	
@@ -140,6 +95,24 @@ public class PDIMedDataServer extends MedAbstractDataServer {
 			FarragoTypeFactory typeFactory, 
 			RelDataType rowType, 
 			Map<String, Properties> columnPropMap) throws SQLException {
+		
+		String schemaName = getSchemaName(localName);
+		PDIKtrFileParams.SchemaType schemaType = PDIKtrFileParams.getSchemaType(schemaName, true);
+		
+		String fileName = tableProps.getProperty(PDIKtrFileParams.PROP_KTR_FILE);
+		if(fileName == null) {
+			fileName = getTableName(localName);
+		}
+		
+		/*String ktrFilePath = params.getDirectory() + fileName
+            				+ params.getFileExtenstion();*/
+		
+		String ktrFilePath = "d:/test/testtrans.ktr";
+		
+		if(rowType == null) {
+			return null;
+		}
+		
         logger.log(Level.SEVERE, "################ in method PDIMedDataServer.newColumnSet()");
 		PDIMedNameDirectory directory = (PDIMedNameDirectory)getNameDirectory();
         logger.log(Level.SEVERE, "################ in method PDIMedDataServer.newColumnSet() -----> Done with getNameDirectory");
@@ -376,7 +349,17 @@ public class PDIMedDataServer extends MedAbstractDataServer {
     }
     
 
-	
+    private String getSchemaName(String [] localName)
+    {
+        assert (localName.length > 1);
+        return localName[localName.length - 2];
+    }
+    
+    private String getTableName(String [] localName)
+    {
+        assert (localName.length > 0);
+        return localName[localName.length - 1];
+    }
 
     
     //~ Inner Classes ----------------------------------------------------------
