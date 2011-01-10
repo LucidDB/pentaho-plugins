@@ -44,11 +44,11 @@ public class LucidDbPlugin implements SpoonPluginInterface {
             LucidDbJetty.start();
           }
         } else if (evt == SpoonLifeCycleEvent.SHUTDOWN) {
-          if (LucidDbLauncher.launched) {
-            LucidDbLauncher.stop();
-          }
           if (LucidDbJetty.launched) {
             LucidDbJetty.stop();
+          }
+          if (LucidDbLauncher.launched) {
+            LucidDbLauncher.stop();
           }
         }
       }

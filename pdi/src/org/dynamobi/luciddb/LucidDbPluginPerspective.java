@@ -28,8 +28,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.pentaho.di.core.Props;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.spoon.SpoonBrowser;
-import org.pentaho.di.ui.spoon.TabMapEntry;
-import org.pentaho.di.ui.spoon.TabMapEntry.ObjectType;
 import org.pentaho.di.ui.core.gui.GUIResource;
 import org.pentaho.di.core.logging.LogChannel;
 import org.pentaho.di.core.logging.LogChannelInterface;
@@ -60,7 +58,6 @@ public class LucidDbPluginPerspective implements SpoonPerspective,
 
   private static TabSet tabfolder;
   private static PropsUI props = PropsUI.getInstance();
-  private static List<TabMapEntry> tabMap;
   
   public LucidDbPluginPerspective() {
     if (singleton == null) {
@@ -70,24 +67,27 @@ public class LucidDbPluginPerspective implements SpoonPerspective,
 
       // holds buttons
       final Composite holder = new Composite(shell, SWT.NONE);
-      holder.setLayout(new GridLayout(2, true));
+      holder.setLayout(new GridLayout(4, true));
 
       startButton = new Button(holder, SWT.PUSH);
       startButton.setText("Start LucidDB and Jetty");
       GridData grid = new GridData();
-      grid.horizontalSpan = 2;
-      //grid.horizontalAlignment = GridData.FILL;
+      grid.horizontalSpan = 1;
       grid.verticalAlignment = GridData.FILL;
-      grid.grabExcessHorizontalSpace = true;
       startButton.setLayoutData(grid);
+
+      Button startBrowserButton = new Button(holder, SWT.PUSH);
+      startBrowserButton.setText("Open Browser Tab");
+      grid = new GridData();
+      grid.horizontalSpan = 1;
+      grid.verticalAlignment = GridData.FILL;
+      startBrowserButton.setLayoutData(grid);
 
       stopButton = new Button(holder, SWT.PUSH);
       stopButton.setText("Stop LucidDB and Jetty");
       grid = new GridData();
-      grid.horizontalSpan = 2;
-      //grid.horizontalAlignment = GridData.FILL;
+      grid.horizontalSpan = 1;
       grid.verticalAlignment = GridData.FILL;
-      grid.grabExcessHorizontalSpace = true;
       stopButton.setLayoutData(grid);
       
       // listeners      
@@ -107,23 +107,40 @@ public class LucidDbPluginPerspective implements SpoonPerspective,
           }
           if (!LucidDbJetty.launched) {
             LucidDbJetty.start();
-            startBrowser();
           }
+        }
+      });
+
+      startBrowserButton.addSelectionListener(new SelectionAdapter() {
+        public void widgetSelected(SelectionEvent e) {
+          startBrowser();
         }
       });
 
       stopButton.addSelectionListener(new SelectionAdapter() {
         public void widgetSelected(SelectionEvent e) {
-          if (LucidDbLauncher.launched) {
-            LucidDbLauncher.stop();
-          }
           if (LucidDbJetty.launched) {
             LucidDbJetty.stop();
-            stopBrowser();
+          }
+          if (LucidDbLauncher.launched) {
+            LucidDbLauncher.stop();
           }
         }
       });
       
+      tabfolder = new TabSet(holder);
+      tabfolder.setChangedFont(GUIResource.getInstance().getFontBold());
+      tabfolder.setUnchangedFont(GUIResource.getInstance().getFontGraph());
+      props.setLook(tabfolder.getSwtTabset(), Props.WIDGET_STYLE_TAB);
+
+      grid = new GridData();
+      grid.horizontalSpan = 4;
+      grid.horizontalAlignment = GridData.FILL;
+      grid.verticalAlignment = GridData.FILL;
+      grid.grabExcessHorizontalSpace = true;
+      grid.grabExcessVerticalSpace = true;
+      tabfolder.getSwtTabset().setLayoutData(grid);
+
       // layout for the holder panel
       grid = new GridData();
       grid.horizontalAlignment = GridData.FILL;
@@ -133,24 +150,14 @@ public class LucidDbPluginPerspective implements SpoonPerspective,
       holder.setLayoutData(grid);    
       holder.layout();
       
-      UI = holder;      
+      UI = holder;
       singleton = this;
-
-      // tabs
-      //tabComp = new Composite(sashform, SWT.BORDER);
-      //props.setLook(tabComp);
-      //tabComp.setLayout(new FillLayout());
-
-      tabfolder = new TabSet(UI);//tabComp
-      tabfolder.setChangedFont(GUIResource.getInstance().getFontBold());
-      tabfolder.setUnchangedFont(GUIResource.getInstance().getFontGraph());
-      props.setLook(tabfolder.getSwtTabset(), Props.WIDGET_STYLE_TAB);
     }
   }
   
   private static void startBrowser() {
     String u = "http://" + LucidDbJetty.host + ":" + LucidDbJetty.port +
-      "/adminui";
+      "/adminui/SQLAdmin.html";
     URL url;
     try {
       url = new URL(u);
@@ -162,47 +169,17 @@ public class LucidDbPluginPerspective implements SpoonPerspective,
     String name = "Admin UI";
 
     try {
-      TabMapEntry tabMapEntry;
-      //TabMapEntry tabMapEntry = findTabMapEntry(name, ObjectType.BROWSER);
-      if (true /*tabMapEntry == null*/) {
-        CTabFolder cTabFolder = tabfolder.getSwtTabset();
-        SpoonBrowser browser = new SpoonBrowser(cTabFolder, null,
-            u, true, true, null);
-        TabItem tabItem = new TabItem(tabfolder, name, name);
-        tabItem.setImage(GUIResource.getInstance().getImageLogoSmall());
-        tabItem.setControl(browser.getComposite());
-
-        tabMapEntry = new TabMapEntry(tabItem, u, name,
-            null, null, browser, ObjectType.BROWSER);
-        tabMap.add(tabMapEntry);
-      }
-      int idx = tabfolder.indexOf(tabMapEntry.getTabItem());
-
-      // keep the focus on the graph
-      tabfolder.setSelected(idx);
+      CTabFolder cTabFolder = tabfolder.getSwtTabset();
+      SpoonBrowser browser = new SpoonBrowser(cTabFolder, null,
+          u, true, true, null);
+      TabItem tabItem = new TabItem(tabfolder, name, name);
+      tabItem.setImage(GUIResource.getInstance().getImageLogoSmall());
+      tabItem.setControl(browser.getComposite());
+      tabfolder.setSelected(0);
     } catch (Exception ex) {
-      boolean ok = false;
       log.logError("Unable to open browser tab.", ex);
     }
   }
-
-  private static void stopBrowser() {
-    //TabMapEntry browser = delegates.tabs.findTabMapEntry("Admin UI", ObjectType.BROWSER);
-    //if (browser != null)
-      //delegates.tabs.removeTab(browser);
-  }
-
-  private static TabMapEntry findTabMapEntry(
-      String tabItemText, ObjectType objectType) {
-    for (TabMapEntry entry : tabMap) {
-			if (entry.getTabItem().isDisposed())
-				continue;
-			if (objectType == entry.getObjectType()
-					&& entry.getTabItem().getText().equalsIgnoreCase(tabItemText))
-        return entry;
-    }
-    return null;
-  }	
 
   public static LucidDbPluginPerspective getSingleton() {
     if (singleton == null) {
