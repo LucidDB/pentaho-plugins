@@ -97,7 +97,8 @@ public class LucidDbPluginPerspective implements SpoonPerspective,
             String dir;
             try {
               // should be kettle/
-              dir = new File(".").getCanonicalPath() + "/plugins/spoon/lucidDb/luciddb/bin";
+              dir = new File(".").getCanonicalPath() +
+                "/plugins/spoon/lucidDb/luciddb/bin";
             } catch (Exception ex) {
               log.logError("Could not open current directory", ex);
               return;
