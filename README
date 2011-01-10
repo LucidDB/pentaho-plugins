@@ -1,0 +1,31 @@
+Quick start:
+
+Set your kettle.dir and pentaho.dir (BI server) properties in the
+build.properties file, then run:
+
+ant deploy-both
+
+which will build and install both the BI plugin and the PDI plugin. You should
+just need to restart each for the changes to take effect. If you just want one
+or the other, there are separate tasks:
+
+ant deploy-bi
+ant deploy-pdi
+
+
+Warnings:
+
+LucidDB relies on symoblic links; if ant cannot find the "tar" command you will
+have to untar the downloaded tarball yourself.
+
+Using the BI plugin:
+
+LucidDb should appear in the plugin menu, simply double-click
+LucidDbAdmin.luciddb.
+
+Using the PDI plugin:
+
+A new LucidDB Perspective should appear in the upper-right corner, open it,
+start the LucidDb and Jetty servers, and the app should load. Be sure to stop
+them before quitting; it is to be determined if this task can be automated as
+in the BI plugin.

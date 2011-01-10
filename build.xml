@@ -1,0 +1,94 @@
+<project name="bi-pdi-luciddb" basedir="." default="deploy-both">
+
+  <condition property="luciddb.url" value="">
+    <os family="windows" />
+  </condition>
+
+  <condition property="luciddb.url" value="http://build.dynamobi.com/job/dy_dev_initbuild/label=lin32/lastSuccessfulBuild/artifact/luciddb/dist/luciddb.tar.bz2">
+    <and>
+      <os family="unix" />
+      <equals arg1="${sun.arch.data.model}" arg2="32" />
+    </and>
+  </condition>
+
+  <condition property="luciddb.url" value="http://build.dynamobi.com/job/dy_dev_initbuild/label=lin64/lastSuccessfulBuild/artifact/luciddb/dist/luciddb.tar.bz2" else="rar">
+    <and>
+      <os family="unix" />
+      <equals arg1="${sun.arch.data.model}" arg2="64" />
+    </and>
+  </condition>
+
+  <condition property="luciddb.url" value="mac">
+    <os family="mac" />
+  </condition>
+
+  <property environment="env" />
+  <condition property="java_home" value="${env.JAVA_HOME}" else="${java.home}/../">
+    <not><equals arg1="${env.JAVA_HOME}" arg2="$${env.JAVA_HOME}" /></not>
+  </condition>
+
+  <target name="init">
+    <mkdir dir="remote_resources" />
+  </target>
+
+  <target name="clean">
+    <ant antfile="build.xml" target="clean-all" dir="bi" />
+    <ant antfile="build.xml" target="clean" dir="pdi" />
+  </target>
+  <target name="clean-resources" depends="clean">
+    <delete dir="remote_resources" />
+  </target>
+
+  <target name="check_lucid">
+    <available file="remote_resources/luciddb-0.0.0" type="dir" property="lucid.exists" />
+  </target>
+
+  <target name="fetch_lucid" depends="check_lucid" unless="lucid.exists">
+    <get src="${luciddb.url}" dest="remote_resources/luciddb.tar.bz2"
+      usetimestamp="true" />
+    <!-- untar does not respect symbolic links which are apparently
+         necessary. -->
+    <!--<untar src="remote_resources/luciddb.tar.bz2" dest="remote_resources"
+      overwrite="true" compression="bzip2" />-->
+    <exec executable="tar">
+      <arg line="-C remote_resources/ -jxvf remote_resources/luciddb.tar.bz2" />
+    </exec>
+    <exec dir="." executable="sh"
+      osfamily="unix">
+      <env key="JAVA_HOME" path="${java_home}" />
+      <arg line="-c 'cd remote_resources/luciddb-0.0.0/install; sh ./install.sh'" />
+    </exec>
+    <exec dir="remote_resources/luciddb-0.0.0/install/" executable="install.bat"
+      osfamily="windows">
+      <env key="JAVA_HOME" path="${java_home}" />
+    </exec>
+  </target>
+
+  <target name="fetch_remote" depends="init,fetch_lucid">
+    <get src="http://build.dynamobi.com/job/dynamo_admin/lastSuccessfulBuild/artifact/flexsqladmin/adminui.war" dest="remote_resources/adminui.war" usetimestamp="true" />
+
+    <get src="http://build.dynamobi.com/job/dynamo_ws/lastSuccessfulBuild/artifact/dynamows-admin/target/adminws.war" dest="remote_resources/adminws.war" usetimestamp="true" />
+  </target>
+
+  <target name="install_db" depends="fetch_remote">
+  </target>
+
+  <target name="deploy-bi" depends="fetch_remote,install_db">
+    <ant antfile="build.xml" dir="bi">
+      <property file="build.properties" />
+      <property file="bi/build.properties" />
+    </ant>
+    <ant antfile="build.xml" target="install" dir="bi">
+      <property file="build.properties" />
+      <property file="bi/build.properties" />
+    </ant>
+  </target>
+
+  <target name="deploy-pdi" depends="fetch_remote,install_db">
+    <ant antfile="build.xml" dir="pdi">
+      <property file="build.properties" />
+    </ant>
+  </target>
+
+  <target name="deploy-both" depends="deploy-bi,deploy-pdi" />
+</project>

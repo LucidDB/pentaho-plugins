@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin title='Sample plugin xml for lucidDB'>
+  <lifecycle-listener class="org.dynamobi.luciddb.LifeCycleListener" />
+
+  <content-type type="luciddb" mime-type="text/html">
+    <title>LucidDB Content</title>
+    <description>LucidDB's AdminUI in an iframe</description>
+    <icon-url>content/lucid-res/lucid_db_logo_PMS_2010.png</icon-url>
+    <operations>
+      <operation>
+        <id>RUN</id>
+        <command>content/lucid-res/adminui.html</command>
+      </operation>
+    </operations>
+  </content-type>
+
+  <static-paths>
+    <static-path url="/lucid-res" localFolder="resources"/>
+  </static-paths>  
+
+</plugin>
