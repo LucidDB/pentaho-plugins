@@ -1,0 +1,47 @@
+<project name="lucidDb" basedir="." default="deploy">
+
+  <path id="classpath">
+    <fileset dir="lib">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <target name="clean">
+    <delete dir="build" />
+  </target>
+
+  <target name="copy-launcher">
+    <copy todir="src/org/dynamobi/luciddb" file="${basedir}/../LucidDbLauncher.java" />
+  </target>
+  <target name="del-launcher">
+    <delete file="src/org/dynamobi/luciddb/LucidDbLauncher.java" />
+  </target>
+
+  <target name="build" depends="copy-launcher">
+    <mkdir dir="build/classes" />
+    <javac srcdir="src" destdir="build/classes" classpathref="classpath" />
+  </target>
+
+  <target name="jar">
+   <jar destfile="build/lucidDb.jar">
+     <fileset dir="build/classes">
+       <include name="**/*" />
+     </fileset>
+   </jar>
+ </target>
+
+  <target name="deploy" depends="clean,build,del-launcher,jar">
+    <mkdir dir="${kettle.dir}/plugins/spoon/lucidDb" />
+    <mkdir dir="${kettle.dir}/plugins/spoon/lucidDb/wars" />
+    <copy file="build/lucidDb.jar" tofile="${kettle.dir}/plugins/spoon/lucidDb/lucidDb.jar" />
+
+    <copy todir="${kettle.dir}/plugins/spoon/lucidDb/wars">
+      <fileset file="${basedir}/../remote_resources/*.war" />
+    </copy>
+    <copy overwrite="true" todir="${kettle.dir}/plugins/spoon/lucidDb/luciddb">
+      <fileset dir="${basedir}/../remote_resources/luciddb-0.0.0/" />
+    </copy>
+    <chmod perm="755" dir="${kettle.dir}/plugins/spoon/lucidDb/luciddb/bin"
+      includes="*" />
+  </target>
+</project>
