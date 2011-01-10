@@ -1,3 +1,6 @@
+/**
+ * parts (c) pentaho 2010
+ */
 package org.dynamobi.luciddb;
 
 import org.pentaho.di.ui.spoon.*;
@@ -14,27 +17,24 @@ public class LucidDbPlugin implements SpoonPluginInterface {
   }
 
   public SpoonLifecycleListener getLifecycleListener() {
-    return null;
+    return new SpoonLifecycleListener() {
+      public void onEvent(SpoonLifeCycleEvent evt) {
+        if (evt == SpoonLifeCycleEvent.STARTUP) {
+          System.out.println("STARTING");
+        } else if (evt == SpoonLifeCycleEvent.SHUTDOWN) {
+          System.out.println("SHUT DOWN");
+        }
+      }
+    };
   }
   
-  /**
-   * Provides an optional SpoonPerspective.
-   * 
-   * @return optional SpoonPerspective
-   */
   public SpoonPerspective getPerspective() {
     return LucidDbPluginPerspective.getSingleton();
   }
 
-  @Override
   public void applyToContainer(String category, XulDomContainer container)
       throws XulException {
-
     container.registerClassLoader(getClass().getClassLoader());
-    if (category.equals("trans-graph")){
-      container.loadOverlay("org/pentaho/pdi/spoon/trans_overlay.xul");
-      //container.addEventHandler(VisHelper.getInstance());
-    }
   }
 }
 
