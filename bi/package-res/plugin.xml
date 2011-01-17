@@ -2,17 +2,37 @@
 <plugin title='Sample plugin xml for lucidDB'>
   <lifecycle-listener class="org.dynamobi.luciddb.LifeCycleListener" />
 
-  <content-type type="luciddb" mime-type="text/html">
-    <title>LucidDB Content</title>
-    <description>LucidDB's AdminUI in an iframe</description>
-    <icon-url>content/lucid-res/lucid_db_logo_PMS_2010.png</icon-url>
-    <operations>
-      <operation>
-        <id>RUN</id>
-        <command>content/lucid-res/adminui.html</command>
-      </operation>
-    </operations>
-  </content-type>
+  <overlays>
+    <overlay id="startup.lucidToolbarButton" resourcebundle="../content/lucid-res/luciddb.properties">
+      <overlay id="startup.lucidToolbarButton">
+        <toolbar id="mainToolbar">
+          <toolbarbutton id="lucidButton"
+            image="../content/lucid-res/lucid_db_logo_PMS_2010-32.png"
+            onclick="mainToolbarHandler.openUrl('luciddb', 'LucidDB Admin UI', 'content/lucid-res/adminui.html')"
+            tooltiptext="Launch LucidDB Admin"
+            insertafter="showBrowserButton" />
+        </toolbar>
+      </overlay>
+    </overlay>
+  </overlays>
+
+  <webservice id="LauncherService" type="xml"
+    class="org.dynamobi.luciddb.LauncherService" />
+
+  <menu-items>
+    <menu-item id="dynamoluciddb" anchor="tools-submenu"
+      label="LucidDB Admin UI"
+      command="content/lucid-res/adminui.html"
+      type="MENU_ITEM" how="LAST_CHILD" />
+    <menu-item id="dynamoluciddbstart" anchor="tools-submenu"
+      label="Start LucidDB"
+      command="content/ws-run/LauncherService/start" type="MENU_ITEM"
+      how="LAST_CHILD" />
+    <menu-item id="dynamoluciddbstop" anchor="tools-submenu"
+      label="Stop LucidDB"
+      command="content/ws-run/LauncherService/stop" type="MENU_ITEM"
+      how="LAST_CHILD" />
+  </menu-items>
 
   <static-paths>
     <static-path url="/lucid-res" localFolder="resources"/>

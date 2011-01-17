@@ -19,9 +19,9 @@ public class LifeCycleListener implements IPluginLifecycleListener {
         return;
       }
       // dir should be biserver/tomcat/bin
-      dir += "/../../pentaho-solutions/system/lucidDB/resources/luciddb/bin";
+      dir += "/../../pentaho-solutions/system/lucidDB/resources";
       if (System.getProperty("os.name").startsWith("Windows")) {
-        dir = dir.replaceAll("/", "\\");
+        dir = dir.replaceAll("/", "\\\\");
       }
       LucidDbLauncher.start(dir);
     }

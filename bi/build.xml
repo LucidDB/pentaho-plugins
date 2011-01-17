@@ -2,14 +2,37 @@
 <!-- Import the subfloor-pkg.xml file which contains all the default ant targets -->
   <import file="build-res/subfloor-pkg.xml" />
 
-
   <target name="install">
+    <mkdir dir="build/pentaho-solutions/system" />
+    <mkdir dir="build/tomcat/webapps" />
+
+    <unzip src="${dist.dir}/${package.basename}.zip" dest="build/pentaho-solutions/system" overwrite="true" />
+
+    <copy file="../common/lucid_db_logo_PMS_2010-32.png" todir="build/pentaho-solutions/system/${ivy.artifact.id}/resources" />
+
+    <copy overwrite="true" todir="build/pentaho-solutions/system/${ivy.artifact.id}/resources">
+     <fileset file="${basedir}/../remote_resources/luciddb.*" />
+   </copy>
+
+    <copy todir="build/tomcat/webapps/">
+      <fileset file="${basedir}/../remote_resources/*.war" />
+    </copy>
+
+    <copy file="${basedir}/../LICENSE.txt" todir="build/" />
+    <copy file="${basedir}/../README" todir="build/" />
+
+    <zip destfile="build/lucidDbBiPlugin.zip">
+      <fileset dir="build">
+        <include name="**/*" />
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="install-local">
     <unzip src="${dist.dir}/${package.basename}.zip" dest="${pentaho.solutions.dir}/system" overwrite="true">
     </unzip>
     
-    <copy todir="${pentaho.solutions.dir}">
-      <fileset dir="${basedir}/solutions/"/>
-    </copy>
+    <copy file="../common/lucid_db_logo_PMS_2010-32.png" todir="${pentaho.solutions.dir}/system/${ivy.artifact.id}/resources" />
 
     <copy overwrite="true" todir="${pentaho.solutions.dir}/system/${ivy.artifact.id}/resources/luciddb">
       <fileset dir="${basedir}/../remote_resources/luciddb-0.0.0/" />
@@ -48,10 +71,15 @@
   </target>
 
   <target name="copy-launcher">
-    <copy todir="src/org/dynamobi/luciddb" file="${basedir}/../LucidDbLauncher.java" />
+    <copy todir="src/org/dynamobi/luciddb" file="${basedir}/../common/LucidDbLauncher.java" />
+    <!--<copy todir="lib">
+      <fileset file="${basedir}/../common/*.jar" />
+    </copy>
+    -->
   </target>
   <target name="del-launcher">
     <delete file="src/org/dynamobi/luciddb/LucidDbLauncher.java" />
+    <delete><fileset file="lib/*.jar" /></delete>
   </target>
   
   <!-- 
@@ -63,6 +91,8 @@
   
   <!-- Set the clean-all target to skip the "clean-jars" step.  We do not want our build
   process to delete the "lib" dir -->
-  <target name="clean-all" depends="clean"/>
+  <target name="clean-all" depends="clean">
+    <delete dir="build" />
+  </target>
 
 </project>

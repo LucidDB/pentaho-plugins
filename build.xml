@@ -1,7 +1,19 @@
-<project name="bi-pdi-luciddb" basedir="." default="deploy-both">
+<project name="bi-pdi-luciddb" basedir="." default="package-both">
 
-  <condition property="luciddb.url" value="">
-    <os family="windows" />
+  <property file="build.properties" />
+
+  <condition property="luciddb.url" value="http://downloads.sf.net/luciddb/luciddb-bin-win32-0.9.3.zip">
+    <and>
+      <os family="windows" />
+      <equals arg1="${sun.arch.data.model}" arg2="32" />
+    </and>
+  </condition>
+
+  <condition property="luciddb.url" value="http://downloads.sf.net/luciddb/luciddb-bin-win64-0.9.3.zip">
+    <and>
+      <os family="windows" />
+      <equals arg1="${sun.arch.data.model}" arg2="64" />
+    </and>
   </condition>
 
   <condition property="luciddb.url" value="http://build.dynamobi.com/job/dy_dev_initbuild/label=lin32/lastSuccessfulBuild/artifact/luciddb/dist/luciddb.tar.bz2">
@@ -11,14 +23,14 @@
     </and>
   </condition>
 
-  <condition property="luciddb.url" value="http://build.dynamobi.com/job/dy_dev_initbuild/label=lin64/lastSuccessfulBuild/artifact/luciddb/dist/luciddb.tar.bz2" else="rar">
+  <condition property="luciddb.url" value="http://build.dynamobi.com/job/dy_dev_initbuild/label=lin64/lastSuccessfulBuild/artifact/luciddb/dist/luciddb.tar.bz2">
     <and>
       <os family="unix" />
       <equals arg1="${sun.arch.data.model}" arg2="64" />
     </and>
   </condition>
 
-  <condition property="luciddb.url" value="mac">
+  <condition property="luciddb.url" value="http://downloads.sf.net/luciddb/luciddb-bin-macos32-0.9.3.tar.bz2">
     <os family="mac" />
   </condition>
 
@@ -29,6 +41,23 @@
 
   <target name="init">
     <mkdir dir="remote_resources" />
+
+    <!-- token replacement of properties -->
+    <!-- bad idea -->
+    <!--<replace file="pdi/src/org/dynamobi/luciddb/LucidDbPluginPerspective.java"
+      token="$${adminui-default-url}" value="${Luciddb.adminui.URL}" />
+    <replace file="pdi/src/org/dynamobi/luciddb/LucidDbPlugin.java"
+      token="$${luciddb-start-on-startup}"
+      value="${Luciddb.start.db.on.plugin.startup}" />
+    <replace file="pdi/src/org/dynamobi/luciddb/LucidDbPlugin.java"
+      token="$${luciddb-start-jetty-on-startup}"
+      value="${Luciddb.start.admin.on.plugin.startup}" />
+    <replace file="bi/package-res/resources/adminui.html"
+      token="$${adminui-default-url}" value="${Luciddb.adminui.URL}" />
+    <replace file="bi/src/org/dynamobi/luciddb/LifeCycleListener.java"
+      token="$${Luciddb.start.db.on.plugin.startup}"
+      value="${Luciddb.start.db.on.plugin.startup}" />
+      -->
   </target>
 
   <target name="clean">
@@ -46,6 +75,15 @@
   <target name="fetch_lucid" depends="check_lucid" unless="lucid.exists">
     <get src="${luciddb.url}" dest="remote_resources/luciddb.tar.bz2"
       usetimestamp="true" />
+  </target>
+
+  <target name="fetch_remote" depends="init,fetch_lucid">
+    <get src="http://build.dynamobi.com/job/dynamo_admin/lastSuccessfulBuild/artifact/flexsqladmin/adminui.war" dest="remote_resources/adminui.war" usetimestamp="true" />
+
+    <get src="http://build.dynamobi.com/job/dynamo_ws/lastSuccessfulBuild/artifact/dynamows-admin/target/adminws.war" dest="remote_resources/adminws.war" usetimestamp="true" />
+  </target>
+
+  <target name="install_db" depends="fetch_lucid" unless="lucid.exists">
     <!-- untar does not respect symbolic links which are apparently
          necessary. -->
     <!--<untar src="remote_resources/luciddb.tar.bz2" dest="remote_resources"
@@ -64,16 +102,7 @@
     </exec>
   </target>
 
-  <target name="fetch_remote" depends="init,fetch_lucid">
-    <get src="http://build.dynamobi.com/job/dynamo_admin/lastSuccessfulBuild/artifact/flexsqladmin/adminui.war" dest="remote_resources/adminui.war" usetimestamp="true" />
-
-    <get src="http://build.dynamobi.com/job/dynamo_ws/lastSuccessfulBuild/artifact/dynamows-admin/target/adminws.war" dest="remote_resources/adminws.war" usetimestamp="true" />
-  </target>
-
-  <target name="install_db" depends="fetch_remote">
-  </target>
-
-  <target name="deploy-bi" depends="fetch_remote,install_db">
+  <target name="package-bi" depends="fetch_remote">
     <ant antfile="build.xml" dir="bi">
       <property file="build.properties" />
       <property file="bi/build.properties" />
@@ -82,13 +111,37 @@
       <property file="build.properties" />
       <property file="bi/build.properties" />
     </ant>
+    <antcall target="finish" />
   </target>
 
-  <target name="deploy-pdi" depends="fetch_remote,install_db">
+  <target name="finish">
+  </target>
+
+  <target name="deploy-local-bi" depends="install_db">
+    <ant antfile="build.xml" dir="bi">
+      <property file="build.properties" />
+      <property file="bi/build.properties" />
+    </ant>
+    <ant antfile="build.xml" target="install-local" dir="bi">
+      <property file="build.properties" />
+      <property file="bi/build.properties" />
+    </ant>
+  </target>
+
+  <target name="package-pdi" depends="fetch_remote">
     <ant antfile="build.xml" dir="pdi">
       <property file="build.properties" />
     </ant>
   </target>
 
-  <target name="deploy-both" depends="deploy-bi,deploy-pdi" />
+  <target name="deploy-local-pdi" depends="install_db">
+    <ant antfile="build.xml" target="deploy-local" dir="pdi">
+      <property file="build.properties" />
+    </ant>
+  </target>
+
+  <target name="package-both" depends="package-bi,package-pdi" />
+
+  <target name="deploy-local-both" depends="deploy-local-bi,deploy-local-pdi" />
+
 </project>

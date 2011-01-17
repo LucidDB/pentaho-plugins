@@ -14,7 +14,7 @@ import java.io.File;
 import org.pentaho.di.core.logging.LogChannel;
 import org.pentaho.di.core.logging.LogChannelInterface;
 
-@SpoonPlugin(id = "LucidDb", image = "")
+@SpoonPlugin(id = "LucidDb", image = "plugins/spoon/lucidDb/lucid_db_logo_PMS_2010-32.png")
 @SpoonPluginCategories({"spoon", "trans-graph"})
 public class LucidDbPlugin implements SpoonPluginInterface {
   
@@ -33,7 +33,7 @@ public class LucidDbPlugin implements SpoonPluginInterface {
             try {
               // should be kettle/
               dir = new File(".").getCanonicalPath() +
-                "/plugins/spoon/lucidDb/luciddb/bin";
+                "/plugins/spoon/lucidDb";
             } catch (Exception ex) {
               log.logError("Could not open current directory", ex);
               return;

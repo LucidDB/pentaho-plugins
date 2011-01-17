@@ -1,4 +1,4 @@
-<project name="lucidDb" basedir="." default="deploy">
+<project name="lucidDb" basedir="." default="package">
 
   <path id="classpath">
     <fileset dir="lib">
@@ -11,7 +11,7 @@
   </target>
 
   <target name="copy-launcher">
-    <copy todir="src/org/dynamobi/luciddb" file="${basedir}/../LucidDbLauncher.java" />
+    <copy todir="src/org/dynamobi/luciddb" file="${basedir}/../common/LucidDbLauncher.java" />
   </target>
   <target name="del-launcher">
     <delete file="src/org/dynamobi/luciddb/LucidDbLauncher.java" />
@@ -30,18 +30,44 @@
    </jar>
  </target>
 
-  <target name="deploy" depends="clean,build,del-launcher,jar">
-    <mkdir dir="${kettle.dir}/plugins/spoon/lucidDb" />
-    <mkdir dir="${kettle.dir}/plugins/spoon/lucidDb/wars" />
-    <copy file="build/lucidDb.jar" tofile="${kettle.dir}/plugins/spoon/lucidDb/lucidDb.jar" />
+ <target name="package" depends="clean,build,del-launcher,jar">
+   <mkdir dir="build/kettle/plugins/spoon/lucidDb/wars" />
+   <copy file="build/lucidDb.jar" tofile="build/kettle/plugins/spoon/lucidDb/lucidDb.jar" />
 
-    <copy todir="${kettle.dir}/plugins/spoon/lucidDb/wars">
-      <fileset file="${basedir}/../remote_resources/*.war" />
-    </copy>
-    <copy overwrite="true" todir="${kettle.dir}/plugins/spoon/lucidDb/luciddb">
-      <fileset dir="${basedir}/../remote_resources/luciddb-0.0.0/" />
-    </copy>
-    <chmod perm="755" dir="${kettle.dir}/plugins/spoon/lucidDb/luciddb/bin"
-      includes="*" />
-  </target>
+   <copy file="../common/lucid_db_logo_PMS_2010-32.png" todir="build/kettle/plugins/spoon/lucidDb" />
+
+   <copy todir="build/kettle/plugins/spoon/lucidDb/wars">
+     <fileset file="${basedir}/../remote_resources/*.war" />
+   </copy>
+
+   <copy overwrite="true" todir="build/kettle/plugins/spoon/lucidDb">
+     <fileset file="${basedir}/../remote_resources/luciddb.*" />
+   </copy>
+
+   <copy file="${basedir}/../LICENSE.txt" todir="build/kettle/plugins/spoon/lucidDb" />
+   <copy file="${basedir}/../README" todir="build/kettle/plugins/spoon/lucidDb" />
+
+   <zip destfile="build/lucidDbPlugin.zip">
+     <fileset dir="build/kettle/plugins/spoon">
+       <include name="**/*" />
+     </fileset>
+   </zip>
+ </target>
+
+ <target name="deploy-local" depends="clean,build,del-launcher,jar">
+   <mkdir dir="${kettle.dir}/plugins/spoon/lucidDb" />
+   <mkdir dir="${kettle.dir}/plugins/spoon/lucidDb/wars" />
+   <copy file="build/lucidDb.jar" tofile="${kettle.dir}/plugins/spoon/lucidDb/lucidDb.jar" />
+
+   <copy file="../common/lucid_db_logo_PMS_2010-32.png" todir="${kettle.dir}/plugins/spoon/lucidDb" />
+
+   <copy todir="${kettle.dir}/plugins/spoon/lucidDb/wars">
+     <fileset file="${basedir}/../remote_resources/*.war" />
+   </copy>
+   <copy overwrite="true" todir="${kettle.dir}/plugins/spoon/lucidDb/luciddb">
+     <fileset dir="${basedir}/../remote_resources/luciddb-0.0.0/" />
+   </copy>
+   <chmod perm="755" dir="${kettle.dir}/plugins/spoon/lucidDb/luciddb/bin"
+     includes="*" />
+ </target>
 </project>

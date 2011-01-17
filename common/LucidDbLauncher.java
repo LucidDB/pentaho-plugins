@@ -1,6 +1,7 @@
 package org.dynamobi.luciddb;
 
 import java.util.*;
+import java.util.zip.*;
 import java.io.*;
 
 public class LucidDbLauncher {
@@ -12,17 +13,41 @@ public class LucidDbLauncher {
   private static BufferedWriter writer;
 
   public static void start(String dir) {
+    // Expects the dir containing luciddb/bin or some archive to be passed.
     String lucid = dir;
+    String slash = "/";
+    String bin_dir = dir;
+    final String ext;
     if (System.getProperty("os.name").startsWith("Windows")) {
-      lucid += "\\lucidDbServer.bat";
+      lucid += "\\luciddb\\bin\\lucidDbServer.bat";
+      slash = "\\";
+      ext = ".zip";
+      bin_dir += "\\luciddb\\bin";
     } else {
-      lucid += "/lucidDbServer";
+      lucid += "/luciddb/bin/lucidDbServer";
+      ext = ".bz2";
+      bin_dir += "/luciddb/bin";
     }
+    String zip = dir + slash;
+    // Do we need to install first?
+    if (!(new File(lucid).exists())) {
+      // Get the zip or tar file...
+      String[] list = new java.io.File(dir).list(new FilenameFilter() {
+        public boolean accept(File dir, String f) {
+          return f.matches("lucid[a-z0-9_\\-\\.]*\\" + ext);
+        }
+      });
+      String fn = list[0]; // there should only be 1.
+      if (ext.equals(".zip")) {
+        // fucking windows
+      } else if (ext.equals(".bz2")) {
+        // just make the fucking system call
+      }
+    }
+
     ProcessBuilder pb = new ProcessBuilder(lucid);
     Map<String, String> env = pb.environment();
-    //env.put("JAVA_HOME", System.getProperty("java.home") + "../");
-    //env.put("JAVA_HOME", "/usr/lib/jvm/java-6-sun/");
-    pb.directory(new File(dir));
+    pb.directory(new File(bin_dir));
     try {
       p = pb.start();
     } catch (IOException e) {

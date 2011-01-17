@@ -1,31 +1,52 @@
-Quick start:
+QUICK START:
 
-Set your kettle.dir and pentaho.dir (BI server) properties in the
-build.properties file, then run:
+If you're deploying locally, set your kettle.dir and pentaho.dir (BI server)
+properties in the build.properties file, then run:
 
-ant deploy-both
+ant deploy-local-both
 
 which will build and install both the BI plugin and the PDI plugin. You should
-just need to restart each for the changes to take effect. If you just want one
-or the other, there are separate tasks:
+just need to restart each server for the changes to take effect.
+If you just want one or the other, there are separate tasks:
 
-ant deploy-bi
-ant deploy-pdi
+ant deploy-local-bi
+ant deploy-local-pdi
 
+If you want to package up a binary distribution for unzipping yourself
+or to deploy on a remote server, simply run:
 
-Warnings:
+ant package-both
+
+which will leave 2 ...Plugin.zip files in bi/build/ and pdi/build/ respectively.
+Extraction paths match as if the root of the BI plugin is "biserver-ce/", and
+as if the root of the PDI plugin is "kettle/plugins/spoon/".
+
+WARNINGS:
+
+Please use the ant build.xml script in this directory rather than directly
+using the ones in the subdirectories.
+
+Do not run both at the same time if you want two separate LucidDB
+instances! Whichever LucidDB instance was started first takes precedence
+over any others that may try to start.
 
 LucidDB relies on symoblic links; if ant cannot find the "tar" command you will
 have to untar the downloaded tarball yourself.
 
-Using the BI plugin:
+USING THE BI PLUGIN:
 
-LucidDb should appear in the plugin menu, simply double-click
-LucidDbAdmin.luciddb.
+A LucidDB button should appear on the button menu, simply click on it
+to launch the AdminUI. To manually start/stop the LucidDB server,
+there are menu items under Tools. (Note: if Luciddb.start.db.on.plugin.startup
+was changed to False, you will have to manually start it.)
 
-Using the PDI plugin:
+Default login to the database is username sa with no password.
 
-A new LucidDB Perspective should appear in the upper-right corner, open it,
-start the LucidDb and Jetty servers, and the app should load. Be sure to stop
-them before quitting; it is to be determined if this task can be automated as
-in the BI plugin.
+USING THE PDI PLUGIN:
+
+A new LucidDB Perspective should appear in the upper-right corner, click to
+switch to it. The Admin should launch automatically, but there are manual
+controls on the top to start and stop LucidDB, launch a new Admin Tab,
+and even starting and stopping the Admin Server (which serves the Admin UI).
+
+Default login to the database is username sa with no password.
