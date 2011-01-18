@@ -33,6 +33,8 @@ public class LucidDbLauncher {
 
   private static boolean start_on_startup = ${Luciddb.start.db.on.plugin.startup};
   public static boolean start_jetty_on_startup = ${Luciddb.start.admin.on.plugin.startup};
+  // Hack for Perspective to get at this.
+  public static String adminui_url = "${Luciddb.adminui.URL}";
 
   public static void start(String dir) {
     // for the options in build.properties,

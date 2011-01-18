@@ -64,21 +64,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
   <target name="init">
     <mkdir dir="remote_resources" />
-
-    <!--<replace file="pdi/src/org/dynamobi/luciddb/LucidDbPluginPerspective.java"
-      token="$${adminui-default-url}" value="${Luciddb.adminui.URL}" />
-    <replace file="pdi/src/org/dynamobi/luciddb/LucidDbPlugin.java"
-      token="$${luciddb-start-on-startup}"
-      value="${Luciddb.start.db.on.plugin.startup}" />
-    <replace file="pdi/src/org/dynamobi/luciddb/LucidDbPlugin.java"
-      token="$${luciddb-start-jetty-on-startup}"
-      value="${Luciddb.start.admin.on.plugin.startup}" />
-    <replace file="bi/package-res/resources/adminui.html"
-      token="$${adminui-default-url}" value="${Luciddb.adminui.URL}" />
-    <replace file="bi/src/org/dynamobi/luciddb/LifeCycleListener.java"
-      token="$${Luciddb.start.db.on.plugin.startup}"
-      value="${Luciddb.start.db.on.plugin.startup}" />
-      -->
   </target>
 
   <target name="clean">

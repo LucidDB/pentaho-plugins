@@ -185,13 +185,13 @@ public class LucidDbPluginPerspective implements SpoonPerspective {
   }
   
   public static void startBrowser() {
-    //String default_url = "${Luciddb.adminui.URL}";
+    String default_url = LucidDbLauncher.adminui_url;
     String u;
-    //if (default_url.equals("/adminui/SQLAdmin.html")) {
-      u = "http://" + LucidDbJetty.host + ":" + LucidDbJetty.port + "/adminui/SQLAdmin.html";
-    /*} else {
+    if (default_url.equals("/adminui/SQLAdmin.html")) {
+      u = "http://" + LucidDbJetty.host + ":" + LucidDbJetty.port + default_url;
+    } else {
       u = default_url;
-    }*/
+    }
     URL url;
     try {
       url = new URL(u);
