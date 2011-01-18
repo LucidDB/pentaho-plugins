@@ -31,6 +31,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
   <target name="copy-launcher">
     <copy todir="src/org/dynamobi/luciddb" file="${basedir}/../common/LucidDbLauncher.java" />
+    <replace file="src/org/dynamobi/luciddb/LucidDbLauncher.java"
+      token="$${Luciddb.start.db.on.plugin.startup}"
+      value="${Luciddb.start.db.on.plugin.startup}" />
+    <replace file="src/org/dynamobi/luciddb/LucidDbLauncher.java"
+      token="$${Luciddb.start.admin.on.plugin.startup}"
+      value="${Luciddb.start.admin.on.plugin.startup}" />
   </target>
   <target name="del-launcher">
     <delete file="src/org/dynamobi/luciddb/LucidDbLauncher.java" />

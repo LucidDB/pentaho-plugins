@@ -28,6 +28,8 @@ import org.mortbay.jetty.webapp.WebAppContext;
 import org.pentaho.di.core.logging.LogChannel;
 import org.pentaho.di.core.logging.LogChannelInterface;
 
+import org.dynamobi.luciddb.LucidDbLauncher;
+
 public class LucidDbJetty {
   
   // pentaho log channel:
@@ -42,6 +44,12 @@ public class LucidDbJetty {
   public static boolean launched = false;
 
   public static void start() {
+    // ignore the first call to start if set that way
+    if (LucidDbLauncher.start_jetty_on_startup == false) {
+      LucidDbLauncher.start_jetty_on_startup = true;
+      return;
+    }
+
     server = new Server();
 
     WebAppContext adminui = new WebAppContext();
@@ -68,9 +76,10 @@ public class LucidDbJetty {
 
     try {
       server.start();
-      launched = true;
     } catch (Exception ex) {
       log.logError("WebServer.Error.FailedToStart.Title", ex);
+    } finally {
+      launched = true;
     }
   }
 
