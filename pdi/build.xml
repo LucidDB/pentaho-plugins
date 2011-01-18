@@ -38,15 +38,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
   <target name="build" depends="copy-launcher">
     <mkdir dir="build/classes" />
+    <unjar dest="build/classes">
+      <fileset file="${basedir}/../common/*.jar" />
+    </unjar>
     <javac srcdir="src" destdir="build/classes" classpathref="classpath" />
   </target>
 
   <target name="jar">
-   <jar destfile="build/lucidDb.jar">
-     <fileset dir="build/classes">
-       <include name="**/*" />
-     </fileset>
-   </jar>
+    <jar destfile="build/lucidDb.jar">
+      <fileset dir="build/classes">
+        <include name="**/*" />
+      </fileset>
+    </jar>
  </target>
 
  <target name="package" depends="clean,build,del-launcher,jar">
@@ -83,10 +86,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
    <copy todir="${kettle.dir}/plugins/spoon/lucidDb/wars">
      <fileset file="${basedir}/../remote_resources/*.war" />
    </copy>
-   <copy overwrite="true" todir="${kettle.dir}/plugins/spoon/lucidDb/luciddb">
-     <fileset dir="${basedir}/../remote_resources/luciddb-0.0.0/" />
+
+   <copy overwrite="true" todir="${kettle.dir}/plugins/spoon/lucidDb">
+     <fileset file="${basedir}/../remote_resources/luciddb.*" />
    </copy>
-   <chmod perm="755" dir="${kettle.dir}/plugins/spoon/lucidDb/luciddb/bin"
-     includes="*" />
  </target>
 </project>

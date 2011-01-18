@@ -11,8 +11,8 @@
     <copy file="../common/lucid_db_logo_PMS_2010-32.png" todir="build/pentaho-solutions/system/${ivy.artifact.id}/resources" />
 
     <copy overwrite="true" todir="build/pentaho-solutions/system/${ivy.artifact.id}/resources">
-     <fileset file="${basedir}/../remote_resources/luciddb.*" />
-   </copy>
+      <fileset file="${basedir}/../remote_resources/luciddb.*" />
+    </copy>
 
     <copy todir="build/tomcat/webapps/">
       <fileset file="${basedir}/../remote_resources/*.war" />
@@ -34,11 +34,9 @@
     
     <copy file="../common/lucid_db_logo_PMS_2010-32.png" todir="${pentaho.solutions.dir}/system/${ivy.artifact.id}/resources" />
 
-    <copy overwrite="true" todir="${pentaho.solutions.dir}/system/${ivy.artifact.id}/resources/luciddb">
-      <fileset dir="${basedir}/../remote_resources/luciddb-0.0.0/" />
+    <copy overwrite="true" todir="${pentaho.solutions.dir}/system/${ivy.artifact.id}/resources">
+      <fileset file="${basedir}/../remote_resources/luciddb.*" />
     </copy>
-    <chmod perm="755" dir="${pentaho.solutions.dir}/system/${ivy.artifact.id}/resources/luciddb/bin"
-      includes="*" />
 
     <copy todir="${pentaho.dir}/tomcat/webapps/">
       <fileset file="${basedir}/../remote_resources/*.war" />
@@ -72,10 +70,9 @@
 
   <target name="copy-launcher">
     <copy todir="src/org/dynamobi/luciddb" file="${basedir}/../common/LucidDbLauncher.java" />
-    <!--<copy todir="lib">
+    <copy todir="lib">
       <fileset file="${basedir}/../common/*.jar" />
     </copy>
-    -->
   </target>
   <target name="del-launcher">
     <delete file="src/org/dynamobi/luciddb/LucidDbLauncher.java" />

@@ -19,8 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 package org.dynamobi.luciddb;
 
 import java.util.*;
-import java.util.zip.*;
 import java.io.*;
+
+import org.apache.ant.compress.taskdefs.Unzip;
 
 public class LucidDbLauncher {
 
@@ -35,32 +36,97 @@ public class LucidDbLauncher {
     String lucid = dir;
     String slash = "/";
     String bin_dir = dir;
+    String install_f = dir;
+    String install_dir = dir;
     final String ext;
     if (System.getProperty("os.name").startsWith("Windows")) {
       lucid += "\\luciddb\\bin\\lucidDbServer.bat";
       slash = "\\";
       ext = ".zip";
       bin_dir += "\\luciddb\\bin";
+      install_dir += "\\luciddb\\install";
+      install_f += "\\luciddb\\install\\install.bat";
     } else {
       lucid += "/luciddb/bin/lucidDbServer";
       ext = ".bz2";
       bin_dir += "/luciddb/bin";
+      install_dir += "/luciddb/install";
+      install_f += "/luciddb/install/install.sh";
     }
     String zip = dir + slash;
     // Do we need to install first?
     if (!(new File(lucid).exists())) {
       // Get the zip or tar file...
-      String[] list = new java.io.File(dir).list(new FilenameFilter() {
+      String[] list = new File(dir).list(new FilenameFilter() {
         public boolean accept(File dir, String f) {
           return f.matches("lucid[a-z0-9_\\-\\.]*\\" + ext);
         }
       });
       String fn = list[0]; // there should only be 1.
       if (ext.equals(".zip")) {
-        // fucking windows
+        // TODO: test if this really works in windows
+        // (requires chmod +x on bin/lucidDbServer on Linux)
+        Unzip un = new Unzip();
+        un.setSrc(new File(zip + fn));
+        un.setDest(new File(zip));
+        un.execute();
       } else if (ext.equals(".bz2")) {
-        // just make the fucking system call
+        Runtime r = Runtime.getRuntime();
+        try {
+          Process p = r.exec("tar -jxf " + zip + fn, null, new File(zip));
+          try {
+            int f = p.waitFor();
+            if (f != 0) {
+              System.err.println("Failed to extract, " +
+                  "exit value = " + p.exitValue());
+              return;
+            }
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+          return;
+        }
       }
+
+      // rename extracted dir to luciddb
+      list = new File(dir).list(new FilenameFilter() {
+        public boolean accept(File dir, String f) {
+          return f.matches("lucid[a-z0-9_\\-\\.]*") &&
+                 !f.matches("lucid[a-z0-9_\\-\\.]*\\" + ext);
+        }
+      });
+      fn = list[0];
+
+      File old = new File(zip + fn);
+      File ren = new File(zip + "luciddb");
+      if (!old.renameTo(ren)) {
+        return;
+      }
+
+      // run install
+      Runtime r = Runtime.getRuntime();
+      try {
+        String[] env = new String[]{"JAVA_HOME=" + System.getProperty("java.home") + "../"};
+        Process p = r.exec(install_f, env, new File(install_dir));
+        try {
+          int f = p.waitFor();
+          if (f != 0) {
+            System.err.println("Failed to install, " +
+                "exit value = " + p.exitValue());
+            return;
+          }
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+          return;
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+        return;
+      }
+
     }
 
     ProcessBuilder pb = new ProcessBuilder(lucid);
