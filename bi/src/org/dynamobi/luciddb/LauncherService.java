@@ -19,10 +19,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 package org.dynamobi.luciddb;
 import org.dynamobi.luciddb.LifeCycleListener;
 
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
+
+import org.pentaho.platform.api.engine.IPluginResourceLoader;
+import org.pentaho.platform.engine.core.system.PentahoSystem;
+
 public class LauncherService {
 
+  public Properties getProperties() {
+    IPluginResourceLoader res_loader = PentahoSystem.get(
+        IPluginResourceLoader.class, null);
+    InputStream in = res_loader.getResourceAsStream(LauncherService.class,
+        "resources/plugin_config.properties");
+    Properties pro = new Properties();
+    try {
+      pro.load(in);
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+    return pro;
+  }
+
   public String start() {
-    new LifeCycleListener().loaded();
+    new LifeCycleListener().loaded(false);
     return "Service started.";
   }
 

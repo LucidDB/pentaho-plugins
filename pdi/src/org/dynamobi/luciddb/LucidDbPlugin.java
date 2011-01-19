@@ -25,7 +25,14 @@ import org.pentaho.ui.xul.XulException;
 import org.dynamobi.luciddb.LucidDbPluginPerspective;
 import org.dynamobi.luciddb.LucidDbLauncher;
 import org.dynamobi.luciddb.LucidDbJetty;
+
 import java.io.File;
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+
 import org.pentaho.di.core.logging.LogChannel;
 import org.pentaho.di.core.logging.LogChannelInterface;
 
@@ -43,7 +50,31 @@ public class LucidDbPlugin implements SpoonPluginInterface {
     return new SpoonLifecycleListener() {
       public void onEvent(SpoonLifeCycleEvent evt) {
         if (evt == SpoonLifeCycleEvent.STARTUP) {
-          if (!LucidDbLauncher.launched) {
+          InputStream in = null;
+          try {
+            in = new FileInputStream(
+                "plugins/spoon/lucidDb/plugin_config.properties");
+          } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+          }
+          Properties pro = new Properties();
+          try {
+            if (in != null) {
+              pro.load(in);
+            }
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+          boolean launch = true;
+          boolean launch_jetty = true;
+          if (in != null && pro != null) {
+            launch = new Boolean(pro.getProperty(
+                  "Luciddb.start.db.on.plugin.startup")).booleanValue();
+            launch_jetty = new Boolean(pro.getProperty(
+                  "Luciddb.start.admin.on.plugin.startup")).booleanValue();
+          }
+
+          if (launch && !LucidDbLauncher.launched) {
             String dir;
             try {
               // should be kettle/
@@ -55,7 +86,7 @@ public class LucidDbPlugin implements SpoonPluginInterface {
             }
             LucidDbLauncher.start(dir);
           }
-          if (!LucidDbJetty.launched) {
+          if (launch_jetty && !LucidDbJetty.launched) {
             LucidDbJetty.start();
           }
         } else if (evt == SpoonLifeCycleEvent.SHUTDOWN) {

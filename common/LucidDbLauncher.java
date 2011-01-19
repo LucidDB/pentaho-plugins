@@ -31,20 +31,7 @@ public class LucidDbLauncher {
   private static BufferedReader reader;
   private static BufferedWriter writer;
 
-  private static boolean start_on_startup = ${Luciddb.start.db.on.plugin.startup};
-  public static boolean start_jetty_on_startup = ${Luciddb.start.admin.on.plugin.startup};
-  // Hack for Perspective to get at this.
-  public static String adminui_url = "${Luciddb.adminui.URL}";
-
   public static void start(String dir) {
-    // for the options in build.properties,
-    // we want to skip any first call to start() (called on startup)
-    // if the following is set to false.
-    if (start_on_startup == false) {
-      start_on_startup = true;
-      return;
-    }
-
     // Expects the dir containing luciddb/bin or some archive to be passed.
     String lucid = dir;
     String slash = "/";

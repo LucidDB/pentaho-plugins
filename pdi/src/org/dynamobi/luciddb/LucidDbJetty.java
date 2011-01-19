@@ -44,12 +44,6 @@ public class LucidDbJetty {
   public static boolean launched = false;
 
   public static void start() {
-    // ignore the first call to start if set that way
-    if (LucidDbLauncher.start_jetty_on_startup == false) {
-      LucidDbLauncher.start_jetty_on_startup = true;
-      return;
-    }
-
     server = new Server();
 
     WebAppContext adminui = new WebAppContext();

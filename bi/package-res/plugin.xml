@@ -8,7 +8,7 @@
         <toolbar id="mainToolbar">
           <toolbarbutton id="lucidButton"
             image="../content/lucid-res/lucid_db_logo_PMS_2010-32.png"
-            onclick="mainToolbarHandler.openUrl('luciddb', 'LucidDB Admin UI', 'content/lucid-res/adminui.html')"
+            onclick="mainToolbarHandler.openUrl('luciddb', 'LucidDB Admin UI', 'content/dynamoadminui')"
             tooltiptext="Launch LucidDB Admin"
             insertafter="showBrowserButton" />
         </toolbar>
@@ -18,11 +18,13 @@
 
   <webservice id="LauncherService" type="xml"
     class="org.dynamobi.luciddb.LauncherService" />
+  <content-generator id="dynamoadminui" type="dynamoadminui" title="Admin UI"
+    class="org.dynamobi.luciddb.LauncherPage" />
 
   <menu-items>
     <menu-item id="dynamoluciddb" anchor="tools-submenu"
       label="LucidDB Admin UI"
-      command="content/lucid-res/adminui.html"
+      command="content/dynamoadminui"
       type="MENU_ITEM" how="LAST_CHILD" />
     <menu-item id="dynamoluciddbstart" anchor="tools-submenu"
       label="Start LucidDB"

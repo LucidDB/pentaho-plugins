@@ -100,11 +100,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <fileset dir="${package.resdir}" />
     </copy>
     <chmod perm="a+x" dir="${stage.dir}" includes="**/*.sh" />
-
-    <!-- LucidDB specific -->
-    <replace file="${approot.stage.dir}/resources/adminui.html"
-      token="$${Luciddb.adminui.URL}" value="${Luciddb.adminui.URL}" />
-
   </target>
 
   <target name="assemble.copy-libs">

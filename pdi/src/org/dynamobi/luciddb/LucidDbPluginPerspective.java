@@ -20,6 +20,9 @@ package org.dynamobi.luciddb;
 
 import java.io.InputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 import org.eclipse.swt.SWT;
@@ -185,7 +188,25 @@ public class LucidDbPluginPerspective implements SpoonPerspective {
   }
   
   public static void startBrowser() {
-    String default_url = LucidDbLauncher.adminui_url;
+    InputStream in = null;
+    try {
+      in = new FileInputStream(
+          "plugins/spoon/lucidDb/plugin_config.properties");
+    } catch (FileNotFoundException ex) {
+      ex.printStackTrace();
+    }
+    Properties pro = new Properties();
+    try {
+      if (in != null) {
+        pro.load(in);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    String default_url = "/adminui/SQLAdmin.html";
+    if (in != null && pro != null) {
+      default_url = pro.getProperty("Luciddb.adminui.URL");
+    }
     String u;
     if (default_url.equals("/adminui/SQLAdmin.html")) {
       u = "http://" + LucidDbJetty.host + ":" + LucidDbJetty.port + default_url;
@@ -205,7 +226,7 @@ public class LucidDbPluginPerspective implements SpoonPerspective {
     try {
       CTabFolder cTabFolder = tabfolder.getSwtTabset();
       SpoonBrowser browser = new SpoonBrowser(cTabFolder, null,
-          u, true, false, null);
+          u, true, true, null);
       TabItem tabItem = new TabItem(tabfolder, name, name);
       tabItem.setImage(GUIResource.getInstance().getImageLogoSmall());
       tabItem.setControl(browser.getComposite());
