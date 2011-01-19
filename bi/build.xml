@@ -53,10 +53,6 @@
     <fileset dir="${lib.dir}">
       <include name="*.jar" />
     </fileset>
-    <fileset dir="${pentaho.lib.dir}">
-      <include name="pentaho-bi-platform-*.jar" />
-    </fileset>
-    <dirset dir="${pentaho.classes.dir}" />
   </path>
   
   <!-- Copy all jars over to the plugin zip, 
@@ -84,7 +80,7 @@
   </target>
   <target name="del-launcher">
     <delete file="src/org/dynamobi/luciddb/LucidDbLauncher.java" />
-    <delete><fileset file="lib/*.jar" /></delete>
+    <delete><fileset file="lib/*.jar" excludes="pentaho-bi-platform-api-3.7.0-stable.jar" /></delete>
   </target>
   
   <!-- 
