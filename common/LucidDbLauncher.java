@@ -153,12 +153,29 @@ public class LucidDbLauncher {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    read();
+    readAll();
     close();
     launched = false;
   }
 
-  public static void read() {
+  public static String read() {
+    // Reads a single line, returns null if no line is available for reading.
+    String line = null;
+    try {
+      if (reader.ready()) {
+        line = reader.readLine();
+        if (line != null)
+          System.out.println(line);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return line;
+  }
+
+  public static void readAll() {
+    // Do not call this unless we are quitting, as readLine will
+    // block.
     try {
       String line;
       while ((line = reader.readLine()) != null)

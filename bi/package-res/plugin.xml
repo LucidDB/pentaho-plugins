@@ -34,6 +34,10 @@
       label="Stop LucidDB"
       command="content/ws-run/LauncherService/stop" type="MENU_ITEM"
       how="LAST_CHILD" />
+    <menu-item id="dynamoluciddbread" anchor="tools-submenu"
+      label="Read Console"
+      command="content/dynamoadminui?action=read_console" type="MENU_ITEM"
+      how="LAST_CHILD" />
   </menu-items>
 
   <static-paths>

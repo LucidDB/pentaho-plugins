@@ -18,8 +18,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 package org.dynamobi.luciddb;
 import org.dynamobi.luciddb.LifeCycleListener;
+import org.dynamobi.luciddb.LucidDbLauncher;
 
 import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -27,6 +30,8 @@ import org.pentaho.platform.api.engine.IPluginResourceLoader;
 import org.pentaho.platform.engine.core.system.PentahoSystem;
 
 public class LauncherService {
+
+  private static List<String> read_messages = new ArrayList<String>();
 
   public Properties getProperties() {
     IPluginResourceLoader res_loader = PentahoSystem.get(
@@ -51,6 +56,22 @@ public class LauncherService {
   public String stop() {
     new LifeCycleListener().unLoaded();
     return "Service stopped.";
+  }
+
+  public String read() {
+    if (LucidDbLauncher.launched) {
+      String line;
+      while ((line = LucidDbLauncher.read()) != null) {
+        read_messages.add(line);
+      }
+      StringBuilder sb = new StringBuilder();
+      for (String s : read_messages) {
+        sb.append(s);
+        sb.append("\n<br />");
+      }
+      return sb.toString();
+    }
+    return "LucidDB has not been started.";
   }
 
 }
