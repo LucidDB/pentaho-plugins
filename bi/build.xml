@@ -73,7 +73,9 @@
   </target>
   <target name="del-launcher">
     <delete file="src/org/dynamobi/luciddb/LucidDbLauncher.java" />
-    <delete><fileset file="lib/*.jar" excludes="pentaho-bi-platform-*" /></delete>
+    <delete><fileset file="lib/*.jar"
+        excludes="pentaho-bi-platform-* commons-logging*" />
+    </delete>
     <delete file="package-res/resources/plugin_config.properties" />
   </target>
   
