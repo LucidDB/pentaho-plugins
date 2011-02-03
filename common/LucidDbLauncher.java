@@ -73,7 +73,7 @@ public class LucidDbLauncher {
       } else if (ext.equals(".bz2")) {
         Runtime r = Runtime.getRuntime();
         try {
-          Process p = r.exec("tar -jxf " + zip + fn, null, new File(zip));
+          Process p = r.exec("/usr/bin/env tar -jxf " + zip + fn, null, new File(zip));
           try {
             int f = p.waitFor();
             if (f != 0) {
