@@ -30,10 +30,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
   </target>
 
   <target name="copy-launcher">
-    <copy todir="src/org/dynamobi/luciddb" file="${basedir}/../common/LucidDbLauncher.java" />
+    <copy todir="src/com/dynamobi/luciddb" file="${basedir}/../common/LucidDbLauncher.java" />
   </target>
   <target name="del-launcher">
-    <delete file="src/org/dynamobi/luciddb/LucidDbLauncher.java" />
+    <delete file="src/com/dynamobi/luciddb/LucidDbLauncher.java" />
   </target>
 
   <target name="build" depends="copy-launcher">

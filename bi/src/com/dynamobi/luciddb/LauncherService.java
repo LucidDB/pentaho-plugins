@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
-package org.dynamobi.luciddb;
-import org.dynamobi.luciddb.LifeCycleListener;
-import org.dynamobi.luciddb.LucidDbLauncher;
+package com.dynamobi.luciddb;
+import com.dynamobi.luciddb.LifeCycleListener;
+import com.dynamobi.luciddb.LucidDbLauncher;
 
 import java.util.Properties;
 import java.util.List;

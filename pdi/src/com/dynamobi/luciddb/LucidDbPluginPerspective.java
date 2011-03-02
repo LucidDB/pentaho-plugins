@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
-package org.dynamobi.luciddb;
+package com.dynamobi.luciddb;
 
 import java.io.InputStream;
 import java.io.File;
@@ -52,8 +52,8 @@ import java.net.URL;
 import org.pentaho.xul.swt.tab.TabItem;
 import org.pentaho.xul.swt.tab.TabSet;
 
-import org.dynamobi.luciddb.LucidDbLauncher;
-import org.dynamobi.luciddb.LucidDbJetty;
+import com.dynamobi.luciddb.LucidDbLauncher;
+import com.dynamobi.luciddb.LucidDbJetty;
 
 public class LucidDbPluginPerspective implements SpoonPerspective {
   

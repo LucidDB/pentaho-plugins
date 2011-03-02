@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin title='Sample plugin xml for lucidDB'>
-  <lifecycle-listener class="org.dynamobi.luciddb.LifeCycleListener" />
+  <lifecycle-listener class="com.dynamobi.luciddb.LifeCycleListener" />
 
   <overlays>
     <overlay id="startup.lucidToolbarButton" resourcebundle="../content/lucid-res/luciddb.properties">
@@ -17,9 +17,9 @@
   </overlays>
 
   <webservice id="LauncherService" type="xml"
-    class="org.dynamobi.luciddb.LauncherService" />
+    class="com.dynamobi.luciddb.LauncherService" />
   <content-generator id="dynamoadminui" type="dynamoadminui" title="Admin UI"
-    class="org.dynamobi.luciddb.LauncherPage" />
+    class="com.dynamobi.luciddb.LauncherPage" />
 
   <menu-items>
     <menu-item id="dynamoluciddb" anchor="tools-submenu"

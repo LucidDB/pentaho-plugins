@@ -65,14 +65,14 @@
   </target>
 
   <target name="copy-launcher">
-    <copy todir="src/org/dynamobi/luciddb" file="${basedir}/../common/LucidDbLauncher.java" />
+    <copy todir="src/com/dynamobi/luciddb" file="${basedir}/../common/LucidDbLauncher.java" />
     <copy todir="lib">
       <fileset file="${basedir}/../common/*.jar" />
     </copy>
     <copy todir="package-res/resources" file="${basedir}/../plugin_config.properties" />
   </target>
   <target name="del-launcher">
-    <delete file="src/org/dynamobi/luciddb/LucidDbLauncher.java" />
+    <delete file="src/com/dynamobi/luciddb/LucidDbLauncher.java" />
     <delete><fileset file="lib/*.jar"
         excludes="pentaho-bi-platform-* commons-logging*" />
     </delete>

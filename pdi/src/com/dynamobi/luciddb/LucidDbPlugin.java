@@ -16,15 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
-package org.dynamobi.luciddb;
+package com.dynamobi.luciddb;
 
 import org.pentaho.di.ui.spoon.*;
 import org.pentaho.ui.xul.XulDomContainer;
 import org.pentaho.ui.xul.XulException;
 
-import org.dynamobi.luciddb.LucidDbPluginPerspective;
-import org.dynamobi.luciddb.LucidDbLauncher;
-import org.dynamobi.luciddb.LucidDbJetty;
+import com.dynamobi.luciddb.LucidDbPluginPerspective;
+import com.dynamobi.luciddb.LucidDbLauncher;
+import com.dynamobi.luciddb.LucidDbJetty;
 
 import java.io.File;
 import java.util.Properties;
@@ -93,7 +93,9 @@ public class LucidDbPlugin implements SpoonPluginInterface {
           if (LucidDbJetty.launched) {
             LucidDbJetty.stop();
           }
+          System.out.println("ORAR");
           if (LucidDbLauncher.launched) {
+            System.out.println("RAR");
             LucidDbLauncher.stop();
           }
         }
