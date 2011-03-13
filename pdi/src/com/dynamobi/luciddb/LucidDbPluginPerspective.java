@@ -226,7 +226,8 @@ public class LucidDbPluginPerspective implements SpoonPerspective {
     try {
       CTabFolder cTabFolder = tabfolder.getSwtTabset();
       SpoonBrowser browser = new SpoonBrowser(cTabFolder, null,
-          u, true, true, null);
+          u, true, false, null);
+      //           ^^^^ shows browser controls
       TabItem tabItem = new TabItem(tabfolder, name, name);
       tabItem.setImage(GUIResource.getInstance().getImageLogoSmall());
       tabItem.setControl(browser.getComposite());

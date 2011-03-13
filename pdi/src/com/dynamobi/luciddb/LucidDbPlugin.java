@@ -93,9 +93,7 @@ public class LucidDbPlugin implements SpoonPluginInterface {
           if (LucidDbJetty.launched) {
             LucidDbJetty.stop();
           }
-          System.out.println("ORAR");
           if (LucidDbLauncher.launched) {
-            System.out.println("RAR");
             LucidDbLauncher.stop();
           }
         }
