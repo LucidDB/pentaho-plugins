@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job>
+  <name>lucidDB</name>
+    <description/>
+    <extended_description/>
+    <job_version/>
+  <directory>&#47;</directory>
+  <created_user>-</created_user>
+  <created_date>2010&#47;09&#47;08 15:13:40.798</created_date>
+  <modified_user>-</modified_user>
+  <modified_date>2010&#47;09&#47;08 15:13:40.798</modified_date>
+    <parameters>
+    </parameters>
+  <connection>
+    <name>Luciddb</name>
+    <server/>
+    <type>GENERIC</type>
+    <access>JNDI</access>
+    <database>LucidDB</database>
+    <port>1521</port>
+    <username>sa</username>
+    <password>Encrypted </password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>1521</attribute></attribute>
+      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>N</attribute></attribute>
+      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>mysql</name>
+    <server>localhost</server>
+    <type>MYSQL</type>
+    <access>Native</access>
+    <database>foodmart</database>
+    <port>3306</port>
+    <username>root</username>
+    <password>Encrypted 2be98afc86aa7f2e4bb18bd63c99dbdde</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute><code>EXTRA_OPTION_MYSQL.defaultFetchSize</code><attribute>500</attribute></attribute>
+      <attribute><code>EXTRA_OPTION_MYSQL.useCursorFetch</code><attribute>true</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>3306</attribute></attribute>
+      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>STREAM_RESULTS</code><attribute>Y</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>N</attribute></attribute>
+      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
+    </attributes>
+  </connection>
+    <slaveservers>
+    </slaveservers>
+  <logconnection/>
+  <logtable/>
+  <size_limit_lines/>
+   <use_batchid>Y</use_batchid>
+   <pass_batchid>N</pass_batchid>
+   <use_logfield>Y</use_logfield>
+   <shared_objects_file/>
+  <entries>
+    <entry>
+      <name>START</name>
+      <description>Special entries</description>
+      <type>SPECIAL</type>
+      <start>Y</start>
+      <dummy>N</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>75</xloc>
+      <yloc>155</yloc>
+      </entry>
+    <entry>
+      <name>creating tables</name>
+      <description>SQL</description>
+      <type>SQL</type>
+      <sql>CREATE TABLE FOODMART.TIME_BY_DAY
+(
+  time_id INTEGER
+, the_date TIMESTAMP
+, the_day VARCHAR(30)
+, the_month VARCHAR(30)
+, the_year SMALLINT
+, day_of_month SMALLINT
+, week_of_year INTEGER
+, month_of_year SMALLINT
+, quarter VARCHAR(30)
+, fiscal_period VARCHAR(30)
+)
+;
+
+CREATE TABLE FOODMART.REGION
+(
+  region_id INTEGER
+, sales_city VARCHAR(30)
+, sales_state_province VARCHAR(30)
+, sales_district VARCHAR(30)
+, sales_region VARCHAR(30)
+, sales_country VARCHAR(30)
+, sales_district_id INTEGER
+)
+;
+
+CREATE TABLE FOODMART.STORE
+(
+  store_id INTEGER
+, store_type VARCHAR(30)
+, region_id INTEGER
+, store_name VARCHAR(30)
+, store_number INTEGER
+, store_street_address VARCHAR(30)
+, store_city VARCHAR(30)
+, store_state VARCHAR(30)
+, store_postal_code VARCHAR(30)
+, store_country VARCHAR(30)
+, store_manager VARCHAR(30)
+, store_phone VARCHAR(30)
+, store_fax VARCHAR(30)
+, first_opened_date TIMESTAMP
+, last_remodel_date TIMESTAMP
+, store_sqft INTEGER
+, grocery_sqft INTEGER
+, frozen_sqft INTEGER
+, meat_sqft INTEGER
+, coffee_bar CHAR(1)
+, video_store CHAR(1)
+, salad_bar CHAR(1)
+, prepared_food CHAR(1)
+, florist CHAR(1)
+)
+;
+
+
+CREATE TABLE foodmart.product
+(
+  product_class_id INTEGER
+, product_id INTEGER
+, brand_name VARCHAR(60)
+, product_name VARCHAR(60)
+, SKU BIGINT
+, SRP NUMERIC(10, 4)
+, gross_weight DOUBLE PRECISION
+, net_weight DOUBLE PRECISION
+, recyclable_package CHAR(1)
+, low_fat CHAR(1)
+, units_per_case SMALLINT
+, cases_per_pallet SMALLINT
+, shelf_width DOUBLE PRECISION
+, shelf_height DOUBLE PRECISION
+, shelf_depth DOUBLE PRECISION
+)
+;
+
+CREATE TABLE foodmart.warehouse
+(
+  warehouse_id INTEGER
+, warehouse_class_id INTEGER
+, stores_id INTEGER
+, warehouse_name VARCHAR(60)
+, wa_address1 VARCHAR(30)
+, wa_address2 VARCHAR(30)
+, wa_address3 VARCHAR(30)
+, wa_address4 VARCHAR(30)
+, warehouse_city VARCHAR(30)
+, warehouse_state_province VARCHAR(30)
+, warehouse_postal_code VARCHAR(30)
+, warehouse_country VARCHAR(30)
+, warehouse_owner_name VARCHAR(30)
+, warehouse_phone VARCHAR(30)
+, warehouse_fax VARCHAR(30)
+)
+;
+
+CREATE TABLE foodmart.inventory_fact_1997
+(
+  product_id INTEGER
+, time_id INTEGER
+, warehouse_id INTEGER
+, store_id INTEGER
+, units_ordered INTEGER
+, units_shipped INTEGER
+, warehouse_sales NUMERIC(10, 4)
+, warehouse_cost NUMERIC(10, 4)
+, supply_time SMALLINT
+, store_invoice NUMERIC(10, 4)
+)
+;</sql>
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename/>
+      <connection>Luciddb</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>183</xloc>
+      <yloc>155</yloc>
+      </entry>
+    <entry>
+      <name>warehouse</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
+      <filename>${Internal.Job.Filename.Directory}&#47;dim_warehouse.ktr</filename>
+      <transname/>
+      <directory/>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name/>
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>403</xloc>
+      <yloc>155</yloc>
+      </entry>
+    <entry>
+      <name>region</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
+      <filename>${Internal.Job.Filename.Directory}&#47;dim_region.ktr</filename>
+      <transname/>
+      <directory/>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name/>
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>501</xloc>
+      <yloc>155</yloc>
+      </entry>
+    <entry>
+      <name>time_by_day</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
+      <filename>${Internal.Job.Filename.Directory}&#47;dim_time_by_day.ktr</filename>
+      <transname/>
+      <directory/>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name/>
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>599</xloc>
+      <yloc>159</yloc>
+      </entry>
+    <entry>
+      <name>store</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
+      <filename>${Internal.Job.Filename.Directory}&#47;dim_store.ktr</filename>
+      <transname/>
+      <directory/>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name/>
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>704</xloc>
+      <yloc>162</yloc>
+      </entry>
+    <entry>
+      <name>Insert into Fact</name>
+      <description>SQL</description>
+      <type>SQL</type>
+      <sql>insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (350, 369, 2, 2, 42, 42, 23.9610, 11.7409, 6, 13.7369);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1021, 369, 2, 2, 70, 70, 31.5980, 15.4830, 7, 18.1151);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1397, 369, 2, 2, 87, 82, 63.3204, 22.1621, 5, 25.7080);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (267, 369, 2, 2, 94, 94, 28.8674, 12.1243, 5, 13.8217);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1270, 369, 2, 2, 44, 44, 37.8752, 13.6351, 3, 16.0894);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (234, 369, 2, 2, 12, 4, 4.6440, 1.7647, 4, 2.0823);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1370, 369, 2, 2, 15, 15, 13.5660, 5.2907, 5, 6.1901);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1493, 369, 2, 2, 32, 32, 68.4288, 24.6344, 5, 28.3296);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (710, 369, 2, 2, 30, 30, 20.3490, 11.5989, 4, 13.2227);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (354, 369, 2, 2, 16, 16, 12.9600, 6.6096, 3, 7.4028);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (277, 369, 2, 2, 49, 49, 56.6832, 17.5718, 5, 20.2076);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (94, 369, 2, 2, 95, 95, 34.1620, 12.9816, 6, 14.9288);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1130, 391, 2, 2, 92, 92, 69.8740, 25.1546, 4, 28.9278);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1362, 391, 3, 3, 52, 52, 34.0912, 16.7047, 4, 19.8786);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1139, 391, 3, 3, 49, 49, 78.4784, 28.2522, 2, 33.0551);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (662, 391, 3, 3, 30, 30, 34.5000, 13.8000, 2, 16.2840);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (119, 391, 3, 3, 53, 53, 62.8368, 36.4453, 3, 41.1832);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (190, 391, 3, 3, 60, 60, 127.9080, 52.4423, 3, 59.2598);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (806, 391, 3, 3, 85, 85, 106.0800, 63.6480, 2, 70.6493);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (103, 391, 3, 3, 94, 94, 39.2920, 16.8956, 2, 19.4299);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (240, 391, 3, 3, 26, 26, 11.8508, 4.5033, 2, 5.0887);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (656, 391, 3, 3, 62, 62, 90.7060, 48.0742, 2, 54.3238);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (552, 391, 3, 3, 91, 91, 19.5195, 9.9549, 3, 11.4481);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (36, 391, 3, 3, 40, 40, 31.6800, 13.9392, 3, 15.6119);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1150, 371, 3, 3, 90, 90, 129.1950, 71.0573, 3, 83.8476);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1406, 371, 3, 3, 30, 30, 6.2160, 2.1756, 1, 2.4802);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (224, 371, 3, 3, 74, 74, 44.8070, 18.3709, 1, 21.6777);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1067, 371, 3, 3, 50, 15, 8.3520, 3.5914, 4, 4.1660);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (97, 371, 3, 3, 44, 44, 14.7972, 8.2864, 4, 9.9437);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1034, 371, 3, 3, 71, 71, 78.5118, 42.3964, 3, 48.7559);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (197, 371, 3, 3, 83, 83, 128.0109, 48.6441, 4, 57.4000);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (734, 371, 3, 3, 47, 1, 0.2268, 0.0680, 3, 0.0802);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (465, 373, 3, 3, 63, 63, 57.6135, 30.5352, 3, 36.0315);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1508, 373, 3, 3, 40, 2, 2.7612, 1.0216, 4, 1.1953);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1498, 373, 3, 3, 18, 18, 19.8720, 10.9296, 3, 13.0062);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1115, 373, 3, 3, 25, 25, 33.7500, 19.9125, 3, 23.6959);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (705, 373, 3, 3, 50, 50, 19.8000, 11.0880, 1, 13.0838);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1521, 373, 3, 3, 60, 20, 5.4600, 2.2932, 2, 2.5455);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (632, 373, 3, 3, 99, 70, 33.6980, 12.8052, 4, 14.4699);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (343, 375, 3, 3, 29, 29, 21.3440, 8.5376, 3, 9.4767);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1093, 375, 3, 3, 85, 85, 126.5905, 49.3703, 3, 58.7507);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1549, 375, 3, 3, 35, 3, 1.5048, 0.5869, 3, 0.6573);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1326, 375, 3, 3, 59, 59, 40.3560, 21.7922, 4, 25.4969);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (849, 375, 3, 3, 63, 63, 44.6985, 24.5842, 1, 28.5177);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (306, 375, 3, 3, 80, 80, 161.5680, 84.0154, 1, 95.7776);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (377, 375, 3, 3, 94, 18, 18.1440, 9.6163, 4, 11.3472);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (993, 375, 3, 3, 78, 78, 132.4830, 62.2670, 2, 69.1164);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (289, 375, 3, 3, 46, 46, 33.4006, 18.3703, 3, 21.4933);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (673, 370, 3, 3, 68, 68, 85.7072, 45.4248, 4, 51.3300);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (450, 370, 3, 3, 34, 34, 41.2488, 21.4494, 4, 23.8088);
+create label &quot;label_1&quot;;
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1532, 370, 3, 3, 75, 75, 32.3175, 14.8661, 3, 17.3933);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (989, 370, 3, 3, 66, 66, 18.2952, 9.6965, 3, 11.6358);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1060, 370, 3, 3, 19, 5, 8.0360, 2.4108, 3, 2.6519);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (117, 370, 3, 3, 30, 30, 28.0500, 9.8175, 3, 11.5846);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (972, 370, 3, 3, 93, 93, 76.7343, 42.9712, 2, 50.7060);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (215, 419, 3, 3, 27, 22, 6.7782, 3.9991, 1, 4.7989);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1019, 419, 3, 3, 74, 74, 116.2392, 56.9572, 2, 63.7921);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (996, 419, 3, 3, 60, 37, 11.3220, 6.6800, 4, 7.9492);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1479, 419, 3, 3, 82, 8, 4.3216, 1.8583, 3, 2.1370);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1175, 419, 3, 3, 52, 52, 27.8876, 12.2705, 1, 14.1111);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1258, 419, 3, 3, 69, 52, 15.5428, 5.7508, 2, 6.5559);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1008, 419, 3, 3, 76, 76, 26.3796, 9.4967, 3, 10.6363);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (199, 419, 3, 3, 26, 26, 24.3152, 14.5891, 4, 16.9234);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1069, 419, 3, 3, 18, 18, 3.6936, 1.3666, 1, 1.5169);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (432, 419, 3, 3, 61, 44, 41.3600, 13.6488, 2, 15.6961);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (369, 419, 3, 3, 39, 16, 13.9840, 5.3139, 3, 5.8453);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1385, 419, 3, 3, 78, 78, 110.4480, 40.8658, 3, 48.6303);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1042, 419, 3, 3, 29, 29, 15.0075, 5.8529, 1, 6.5552);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1039, 389, 2, 2, 74, 74, 24.5754, 12.2877, 6, 13.5165);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (30, 389, 2, 2, 47, 47, 29.1588, 9.3308, 5, 10.5438);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1499, 389, 2, 2, 34, 34, 14.6506, 8.3508, 4, 9.1859);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (623, 389, 2, 2, 67, 67, 39.7980, 13.9293, 6, 15.6008);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1279, 389, 2, 2, 17, 17, 25.6632, 10.7785, 6, 11.9641);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (456, 389, 2, 2, 19, 19, 17.2482, 7.2442, 2, 8.4033);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (633, 389, 2, 2, 100, 100, 38.4800, 14.6224, 2, 17.1082);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (517, 389, 2, 2, 71, 71, 86.9040, 50.4043, 6, 55.4447);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (866, 389, 2, 2, 55, 12, 18.2688, 7.6729, 3, 9.0540);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (962, 389, 2, 2, 33, 33, 27.7695, 14.4401, 5, 16.0285);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1406, 389, 2, 2, 41, 41, 11.7096, 4.0984, 5, 4.5492);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (490, 389, 2, 2, 66, 66, 54.4500, 28.8585, 3, 34.3416);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (533, 389, 2, 2, 75, 75, 83.4900, 37.5705, 5, 43.5818);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (251, 381, 2, 2, 66, 66, 96.6240, 37.6834, 5, 41.8286);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (468, 381, 2, 2, 86, 86, 86.7912, 38.1881, 5, 44.2982);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1377, 381, 2, 2, 85, 85, 122.6805, 44.1650, 4, 49.4648);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (207, 381, 2, 2, 74, 74, 45.8800, 14.2228, 3, 16.4984);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (184, 381, 2, 2, 19, 19, 27.7780, 13.8890, 7, 15.9724);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (667, 381, 2, 2, 91, 91, 123.4506, 70.3668, 2, 77.4035);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (269, 383, 2, 2, 91, 91, 139.5576, 79.5478, 6, 92.2754);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (778, 383, 2, 2, 75, 75, 104.0400, 53.0604, 3, 63.6725);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1222, 383, 2, 2, 82, 82, 70.3150, 36.5638, 5, 41.3171);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1451, 383, 2, 2, 35, 35, 18.7110, 10.8524, 6, 12.6973);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1494, 383, 2, 2, 11, 11, 10.3488, 5.0709, 6, 5.8822);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (219, 383, 2, 2, 24, 24, 19.9584, 8.7817, 5, 9.7477);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (928, 383, 2, 2, 59, 59, 55.4895, 30.5192, 3, 35.7075);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (772, 383, 2, 2, 17, 8, 6.2080, 2.7315, 3, 3.1139);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (96, 383, 2, 2, 65, 65, 56.2315, 23.6172, 7, 27.3960);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (152, 383, 2, 2, 13, 13, 17.2822, 6.0488, 3, 6.8351);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1128, 383, 2, 2, 69, 69, 66.6333, 22.6553, 5, 25.1474);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1318, 383, 2, 2, 19, 19, 9.3651, 5.3381, 7, 6.1388);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (627, 383, 2, 2, 11, 11, 6.1710, 2.1599, 2, 2.3759);
+create label &quot;label_2&quot;;
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1134, 622, 6, 6, 44, 44, 37.6376, 22.5826, 3, 25.7442);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1097, 622, 6, 6, 90, 90, 108.3600, 39.0096, 3, 44.8610);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (381, 622, 6, 6, 91, 91, 82.6917, 29.7690, 4, 35.1274);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1384, 622, 6, 6, 83, 83, 123.7198, 39.5903, 3, 47.1125);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (348, 622, 6, 6, 54, 54, 32.5458, 16.9238, 3, 18.9547);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1484, 622, 6, 6, 38, 38, 9.5304, 3.6216, 1, 4.2011);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (48, 622, 6, 6, 68, 68, 39.6304, 15.4559, 3, 17.3106);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (824, 622, 6, 6, 88, 88, 109.5512, 49.2980, 3, 57.1857);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (54, 622, 6, 6, 88, 88, 134.0768, 48.2676, 2, 54.0597);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1408, 628, 6, 6, 98, 98, 155.8200, 88.8174, 4, 98.5873);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (226, 628, 6, 6, 52, 52, 13.0416, 5.0862, 4, 5.9509);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1068, 628, 6, 6, 68, 68, 80.3488, 48.2093, 2, 54.9586);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (99, 628, 6, 6, 57, 57, 73.9860, 40.6923, 4, 48.0169);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1035, 628, 6, 6, 92, 92, 58.2084, 20.9550, 3, 24.5174);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (199, 628, 6, 6, 74, 61, 51.9537, 18.7033, 4, 22.0699);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (735, 628, 6, 6, 41, 41, 31.3404, 10.6557, 4, 12.6803);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1512, 628, 6, 6, 79, 18, 5.5404, 2.7702, 4, 3.2411);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (742, 628, 6, 6, 26, 26, 21.8348, 9.8257, 3, 10.9065);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1079, 628, 6, 6, 61, 61, 76.8417, 43.0314, 1, 50.3467);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (896, 628, 6, 6, 19, 9, 9.8892, 4.4501, 1, 5.0731);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1445, 628, 6, 6, 67, 67, 20.8236, 8.9541, 4, 10.3868);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (942, 628, 6, 6, 15, 15, 16.4970, 5.9389, 2, 6.7110);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1302, 611, 6, 6, 89, 89, 64.2135, 22.4747, 2, 26.0707);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (985, 611, 6, 6, 27, 27, 8.1648, 2.8577, 2, 3.3149);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (376, 611, 6, 6, 45, 45, 51.0750, 20.4300, 2, 23.0859);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (232, 611, 6, 6, 18, 18, 25.0902, 7.7780, 2, 8.7891);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (249, 611, 6, 6, 95, 95, 49.8465, 23.4279, 1, 26.7078);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (199, 611, 6, 6, 37, 37, 27.1876, 15.7688, 3, 17.8187);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (349, 611, 6, 6, 83, 83, 62.1504, 21.1311, 4, 24.0895);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1458, 611, 6, 6, 85, 85, 91.2050, 31.0097, 1, 36.2813);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1248, 611, 6, 6, 10, 10, 11.3220, 3.3966, 3, 4.0080);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1464, 611, 6, 6, 47, 47, 65.3864, 32.6932, 3, 37.2702);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (815, 611, 6, 6, 32, 32, 10.5984, 3.8154, 4, 4.3877);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (59, 611, 6, 6, 62, 62, 51.2120, 18.9484, 2, 21.0327);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (699, 618, 6, 6, 28, 28, 20.6752, 8.8903, 2, 10.2238);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (770, 618, 6, 6, 12, 12, 10.7604, 6.3486, 3, 7.5548);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1386, 618, 6, 6, 43, 43, 23.2716, 7.2142, 2, 8.1520);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (682, 618, 6, 6, 62, 62, 11.7242, 4.3380, 2, 5.0755);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (820, 618, 6, 6, 62, 11, 2.7720, 1.0811, 3, 1.2433);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1236, 618, 6, 6, 32, 32, 32.9344, 9.8803, 1, 10.9671);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1546, 618, 6, 6, 60, 60, 15.3720, 7.6860, 3, 8.9158);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (616, 618, 6, 6, 95, 7, 3.9102, 1.9942, 4, 2.2933);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1020, 618, 6, 6, 31, 31, 6.3240, 3.5414, 4, 4.2497);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (637, 618, 6, 6, 31, 26, 10.5092, 5.0444, 1, 5.5993);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (227, 618, 6, 6, 35, 35, 29.7990, 9.2377, 1, 10.6234);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1043, 618, 6, 6, 86, 86, 43.2064, 25.0597, 4, 28.3175);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (154, 618, 6, 6, 98, 98, 74.9112, 32.2118, 1, 36.3993);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1397, 632, 6, 6, 76, 76, 42.3852, 15.2587, 3, 17.0897);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (281, 632, 6, 6, 27, 27, 24.1434, 9.1745, 4, 10.6424);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (510, 632, 6, 6, 19, 7, 1.5799, 0.5214, 2, 0.6048);
+create label &quot;label_3&quot;;
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (933, 376, 7, 7, 90, 90, 155.1420, 77.5710, 3, 90.7581);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (989, 376, 7, 7, 22, 22, 11.0880, 4.1026, 2, 4.5949);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (407, 376, 7, 7, 58, 58, 83.7810, 49.4308, 3, 55.8568);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1010, 376, 7, 7, 21, 21, 25.0425, 14.2742, 2, 16.4153);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1173, 376, 7, 7, 59, 59, 58.6047, 29.3024, 3, 32.8187);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1416, 376, 7, 7, 25, 25, 22.9350, 11.2381, 4, 12.3619);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (124, 388, 7, 7, 20, 20, 14.0360, 4.6319, 3, 5.1414);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (661, 388, 7, 7, 37, 37, 32.0346, 12.1731, 3, 14.4860);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1437, 388, 7, 7, 11, 11, 7.6560, 4.4405, 3, 5.2398);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (667, 388, 7, 7, 87, 87, 113.3958, 60.0998, 4, 71.5188);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1005, 388, 7, 7, 30, 30, 25.4820, 14.0151, 3, 16.6780);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (821, 388, 7, 7, 76, 76, 56.6124, 21.5127, 3, 25.6001);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1371, 388, 7, 7, 72, 65, 96.3300, 34.6788, 3, 41.2678);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (867, 388, 7, 7, 86, 86, 54.9712, 21.4388, 3, 24.6546);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1550, 388, 7, 7, 17, 17, 14.1542, 7.9264, 1, 8.7983);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1061, 388, 7, 7, 88, 88, 46.7456, 28.0474, 3, 31.9740);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1383, 388, 7, 7, 21, 21, 22.2999, 10.7040, 2, 12.7378);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1, 388, 7, 7, 94, 94, 125.9130, 37.7739, 2, 43.8177);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (801, 381, 7, 7, 31, 31, 24.6450, 13.8012, 2, 15.1813);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (218, 381, 7, 7, 64, 53, 65.6352, 24.9414, 1, 27.6850);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (408, 381, 7, 7, 63, 46, 40.4800, 13.7632, 2, 15.8277);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (984, 381, 7, 7, 40, 17, 5.3703, 2.0944, 3, 2.3038);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1228, 381, 7, 7, 80, 80, 103.3680, 39.2798, 3, 46.7430);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (911, 381, 7, 7, 31, 31, 28.0922, 10.9560, 1, 12.3803);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (301, 381, 7, 7, 23, 23, 6.8264, 2.6623, 2, 3.1415);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (158, 381, 7, 7, 89, 89, 46.4046, 19.0259, 1, 22.4506);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1555, 387, 7, 7, 74, 74, 89.5030, 41.1714, 3, 45.7003);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (292, 387, 7, 7, 42, 42, 38.0100, 19.3851, 3, 22.2929);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (136, 387, 7, 7, 13, 13, 28.1736, 12.9599, 2, 15.0335);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1018, 387, 7, 7, 97, 97, 50.5176, 16.1656, 3, 18.5904);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1488, 387, 7, 7, 76, 76, 92.4768, 32.3669, 2, 36.2509);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (492, 387, 7, 7, 72, 72, 53.5248, 23.5509, 3, 28.2611);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1095, 387, 7, 7, 53, 53, 48.5692, 27.1988, 3, 30.7346);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (113, 387, 7, 7, 76, 76, 102.6836, 36.9661, 1, 42.5110);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1501, 387, 7, 7, 83, 83, 73.2060, 35.8709, 4, 41.2515);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1185, 387, 7, 7, 18, 14, 6.9930, 2.9371, 1, 3.2896);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (575, 387, 7, 7, 83, 83, 137.6057, 44.0338, 4, 50.6389);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (845, 387, 7, 7, 67, 67, 45.6672, 21.9203, 2, 26.0852);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (862, 387, 7, 7, 97, 84, 112.3668, 50.5651, 2, 56.6329);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1383, 371, 7, 7, 62, 62, 94.7422, 41.6866, 3, 50.0239);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (440, 371, 7, 7, 23, 9, 2.7135, 0.9497, 1, 1.0827);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1296, 371, 7, 7, 55, 55, 81.4495, 30.9508, 3, 35.2839);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1433, 371, 7, 7, 49, 49, 76.0333, 34.9753, 1, 40.5713);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (290, 371, 7, 7, 28, 28, 26.1800, 12.8282, 3, 14.4959);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (186, 371, 7, 7, 24, 24, 19.8024, 11.4854, 1, 12.7488);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1229, 371, 7, 7, 29, 29, 11.6870, 4.6748, 1, 5.1890);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (74, 371, 7, 7, 28, 15, 11.7750, 5.7698, 1, 6.5199);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (836, 371, 7, 7, 16, 16, 6.2304, 2.5545, 2, 2.9632);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (840, 371, 7, 7, 31, 31, 25.0573, 11.2758, 4, 13.1927);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (97, 371, 7, 7, 92, 92, 23.3404, 13.3040, 3, 14.9005);
+create label &quot;label_4&quot;;
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1429, 654, 11, 11, 32, 32, 28.4160, 11.3664, 3, 13.1850);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (86, 654, 11, 11, 57, 57, 98.1882, 56.9492, 2, 65.4916);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (996, 654, 11, 11, 67, 67, 30.7530, 12.9163, 2, 15.3704);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1385, 654, 11, 11, 28, 28, 28.8960, 11.2694, 2, 13.1852);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1362, 654, 11, 11, 40, 40, 29.8000, 15.7940, 2, 18.4790);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (286, 654, 11, 11, 93, 93, 67.3506, 34.3488, 3, 40.8751);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (396, 654, 11, 11, 42, 42, 76.2048, 33.5301, 3, 38.8949);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (479, 654, 11, 11, 97, 90, 83.2050, 36.6102, 3, 41.7356);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (230, 654, 11, 11, 56, 56, 29.9880, 16.1935, 2, 18.2987);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (979, 654, 11, 11, 55, 55, 103.9500, 46.7775, 3, 56.1330);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1435, 654, 11, 11, 59, 6, 7.5072, 4.3542, 3, 5.0944);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1212, 654, 11, 11, 61, 61, 16.4883, 8.4090, 1, 9.5863);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (735, 654, 11, 11, 50, 50, 30.1350, 17.4783, 1, 19.7505);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (561, 643, 11, 11, 89, 89, 27.4120, 12.6095, 2, 15.1314);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1098, 643, 11, 11, 65, 65, 29.8155, 11.0317, 2, 12.7968);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1461, 643, 11, 11, 78, 78, 63.8976, 20.4472, 1, 22.4919);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1105, 643, 11, 11, 23, 23, 23.8280, 10.2460, 3, 12.2952);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1028, 643, 11, 11, 71, 71, 52.4832, 30.9651, 1, 35.3002);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (845, 643, 11, 11, 99, 99, 50.6088, 29.8592, 2, 34.0395);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1394, 643, 11, 11, 26, 7, 6.0214, 2.0473, 2, 2.4363);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1304, 643, 11, 11, 66, 38, 8.4018, 4.3689, 3, 4.8495);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (428, 643, 11, 11, 82, 82, 18.6796, 5.7907, 2, 6.8909);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1498, 643, 11, 11, 35, 35, 25.7600, 11.8496, 3, 13.8640);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (262, 643, 11, 11, 63, 63, 29.5470, 13.8871, 4, 16.1090);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (439, 643, 11, 11, 80, 80, 120.4000, 62.6080, 4, 69.4949);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (322, 643, 11, 11, 53, 53, 72.6524, 24.7018, 3, 27.9130);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (672, 643, 11, 11, 40, 40, 44.0880, 26.0119, 2, 28.8732);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1475, 648, 11, 11, 82, 82, 148.8792, 84.8611, 2, 95.8930);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1452, 648, 11, 11, 61, 61, 84.6192, 25.3858, 1, 30.4630);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (375, 648, 11, 11, 58, 58, 49.1434, 19.6574, 3, 23.1957);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (486, 648, 11, 11, 39, 39, 23.5638, 12.0175, 2, 13.4596);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (569, 648, 11, 11, 56, 56, 93.7888, 55.3354, 3, 62.5290);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (319, 648, 11, 11, 63, 48, 32.2560, 12.5798, 4, 14.9700);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1069, 648, 11, 11, 92, 92, 16.2564, 5.6897, 4, 6.8276);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1524, 648, 11, 11, 63, 63, 41.2776, 22.7027, 3, 25.6541);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1302, 648, 11, 11, 47, 47, 35.6495, 14.6163, 1, 17.1011);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (825, 648, 11, 11, 77, 77, 74.0894, 31.1175, 3, 35.1628);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (282, 648, 11, 11, 97, 97, 28.8672, 13.8563, 3, 16.2119);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (353, 648, 11, 11, 97, 97, 83.7595, 32.6662, 3, 36.9128);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (5, 647, 11, 11, 96, 26, 24.4842, 12.7318, 2, 14.0050);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (382, 647, 11, 11, 26, 26, 23.1660, 12.0463, 2, 13.6123);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1225, 647, 11, 11, 41, 41, 31.0288, 15.2041, 1, 17.3327);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (255, 647, 11, 11, 12, 12, 4.3776, 1.3133, 4, 1.5366);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1192, 647, 11, 11, 87, 87, 46.8930, 25.3222, 2, 28.1076);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (355, 647, 11, 11, 93, 93, 29.3787, 16.4521, 3, 18.7554);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (892, 647, 11, 11, 47, 39, 33.0057, 18.4832, 2, 20.5164);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (109, 647, 11, 11, 40, 40, 83.7400, 31.8212, 3, 36.2762);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (898, 647, 11, 11, 72, 72, 45.1008, 22.5504, 3, 24.8054);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1235, 647, 11, 11, 32, 31, 15.4008, 5.2363, 4, 6.0741);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1052, 647, 11, 11, 34, 34, 21.4200, 11.1384, 3, 12.3636);
+create label &quot;label_5&quot;;
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (514, 371, 13, 13, 58, 58, 57.7390, 17.3217, 2, 19.0539);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (810, 371, 13, 13, 98, 77, 23.7006, 9.7172, 3, 11.2720);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (653, 371, 13, 13, 65, 65, 56.0170, 31.9297, 4, 36.3999);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1536, 371, 13, 13, 69, 69, 51.3912, 29.2930, 2, 33.1011);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (447, 371, 13, 13, 86, 86, 104.0256, 56.1738, 2, 62.3529);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1009, 371, 13, 13, 84, 84, 112.2660, 50.5197, 1, 55.5717);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (54, 371, 13, 13, 70, 51, 58.2777, 32.0527, 3, 35.2580);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (419, 377, 13, 13, 99, 99, 127.2348, 61.0727, 3, 71.4551);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (330, 377, 13, 13, 88, 88, 150.6032, 66.2654, 2, 75.5426);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1012, 377, 13, 13, 57, 57, 58.2084, 30.8505, 1, 33.9356);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (109, 377, 13, 13, 99, 99, 168.1515, 63.8976, 2, 74.7602);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (846, 377, 13, 13, 13, 13, 8.2251, 3.2078, 3, 3.7531);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (609, 377, 13, 13, 31, 31, 36.1305, 13.0070, 3, 14.8280);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (492, 377, 13, 13, 94, 94, 81.5262, 45.6547, 2, 52.0464);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (842, 377, 13, 13, 80, 80, 92.1600, 47.0016, 4, 52.6418);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1352, 377, 13, 13, 47, 47, 49.8200, 26.4046, 3, 30.1012);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (236, 377, 13, 13, 69, 69, 72.4362, 26.8014, 3, 30.8216);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (879, 377, 13, 13, 71, 71, 31.5240, 11.6639, 4, 13.7634);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (509, 377, 13, 13, 86, 86, 96.4060, 32.7780, 3, 39.0058);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (792, 377, 13, 13, 57, 57, 50.9922, 22.9465, 2, 25.7001);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1502, 377, 13, 13, 41, 41, 46.0840, 17.9728, 3, 20.8484);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (739, 379, 13, 13, 60, 60, 72.8280, 36.4140, 1, 41.5120);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (489, 379, 13, 13, 44, 44, 41.3556, 22.7456, 1, 25.4751);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1239, 379, 13, 13, 84, 84, 107.2512, 52.5531, 3, 60.9616);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (550, 379, 13, 13, 52, 52, 44.9280, 25.6090, 3, 28.4260);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1472, 379, 13, 13, 29, 10, 11.2200, 3.8148, 3, 4.2344);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1409, 379, 13, 13, 39, 39, 12.1953, 4.7562, 2, 5.6599);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (866, 379, 13, 13, 13, 13, 18.4418, 10.8807, 3, 12.9480);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (523, 379, 13, 13, 89, 89, 76.5400, 35.2084, 4, 41.1938);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1139, 379, 13, 13, 32, 32, 49.4208, 27.6756, 2, 32.9340);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (849, 379, 13, 13, 78, 78, 54.0540, 17.2973, 3, 20.7568);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (267, 387, 13, 13, 75, 59, 20.0777, 6.8264, 4, 7.5773);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1537, 387, 13, 13, 92, 92, 123.0684, 39.3819, 2, 45.2892);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1260, 387, 13, 13, 69, 69, 25.8888, 8.8022, 3, 10.2106);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (118, 387, 13, 13, 63, 63, 52.2144, 22.4522, 4, 26.2691);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (428, 387, 13, 13, 18, 18, 6.2712, 2.8848, 4, 3.2021);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1470, 387, 13, 13, 38, 38, 38.4636, 12.6930, 2, 15.2316);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1460, 387, 13, 13, 19, 19, 23.4726, 8.6849, 4, 9.8139);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1077, 387, 13, 13, 42, 42, 91.1904, 50.1547, 3, 57.6779);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (667, 387, 13, 13, 25, 25, 23.2750, 8.6118, 3, 9.9036);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1483, 387, 13, 13, 74, 28, 33.3984, 14.0273, 1, 16.5522);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (594, 387, 13, 13, 82, 82, 19.0240, 5.8974, 4, 6.5461);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (971, 387, 13, 13, 66, 23, 30.8085, 14.1719, 2, 17.0063);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1400, 387, 13, 13, 44, 44, 18.5416, 10.3833, 3, 11.6293);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1365, 370, 13, 13, 28, 28, 7.8652, 4.2472, 3, 5.0117);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (995, 370, 13, 13, 86, 86, 46.4830, 15.8042, 2, 18.0168);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1278, 370, 13, 13, 44, 44, 68.2440, 34.1220, 3, 37.8754);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (428, 370, 13, 13, 49, 49, 16.0867, 8.0434, 4, 8.9282);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (272, 370, 13, 13, 66, 66, 147.0942, 69.1343, 4, 81.5785);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1155, 370, 13, 13, 39, 39, 22.7292, 8.6371, 4, 10.1918);
+create label &quot;label_6&quot;;
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1191, 386, 14, 14, 79, 79, 51.4290, 18.5144, 3, 21.2916);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (887, 386, 14, 14, 100, 100, 77.4000, 41.0220, 4, 45.1242);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (970, 386, 14, 14, 81, 81, 148.6269, 84.7173, 3, 96.5777);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1012, 386, 14, 14, 13, 13, 13.6344, 6.1355, 2, 7.2399);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (202, 386, 14, 14, 87, 87, 57.0372, 33.0816, 2, 38.3747);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1072, 386, 14, 14, 22, 22, 15.0150, 6.9069, 1, 8.0811);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (435, 386, 14, 14, 55, 1, 1.6980, 0.5603, 1, 0.6612);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (373, 386, 14, 14, 70, 70, 110.1240, 53.9608, 2, 64.2134);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1388, 386, 14, 14, 11, 10, 10.1500, 4.6690, 2, 5.2293);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1441, 378, 14, 14, 47, 47, 26.4751, 14.8261, 4, 16.4570);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (498, 378, 14, 14, 44, 16, 14.2800, 7.1400, 1, 8.1396);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (209, 378, 14, 14, 45, 45, 39.5505, 23.7303, 3, 27.0525);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1491, 378, 14, 14, 90, 84, 80.1864, 36.0839, 1, 42.9398);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (348, 378, 14, 14, 95, 30, 19.5570, 6.2582, 2, 7.1343);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (658, 378, 14, 14, 85, 85, 129.8460, 58.4307, 1, 68.3639);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (142, 378, 14, 14, 71, 71, 72.4768, 28.9907, 3, 33.3393);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (456, 381, 14, 14, 97, 97, 155.3940, 77.6970, 2, 90.9055);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (433, 381, 14, 14, 18, 18, 18.7920, 6.7651, 3, 7.8475);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (916, 381, 14, 14, 87, 87, 125.2104, 48.8321, 2, 55.1803);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1026, 381, 14, 14, 84, 84, 82.3032, 39.5055, 3, 43.8511);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1110, 381, 14, 14, 65, 65, 58.2400, 17.4720, 3, 19.9181);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (860, 381, 14, 14, 88, 88, 67.9536, 27.1814, 2, 31.8022);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (555, 385, 14, 14, 15, 2, 2.9376, 1.6157, 3, 1.8419);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (184, 385, 14, 14, 70, 70, 73.7800, 24.3474, 4, 28.9734);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (467, 385, 14, 14, 47, 47, 68.0466, 38.7866, 3, 46.5439);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1177, 385, 14, 14, 41, 41, 23.9932, 8.6376, 4, 10.2787);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1021, 385, 14, 14, 20, 20, 8.2960, 3.2354, 3, 3.7207);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (344, 385, 14, 14, 17, 17, 17.4420, 5.4070, 1, 6.2181);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (401, 385, 14, 14, 14, 14, 4.4100, 1.5435, 1, 1.7905);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1377, 385, 14, 14, 37, 37, 48.1666, 25.5283, 3, 28.3364);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (421, 385, 14, 14, 45, 45, 69.0300, 24.8508, 3, 27.5844);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (584, 385, 14, 14, 70, 70, 77.9590, 42.0979, 2, 50.5175);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1120, 371, 15, 15, 16, 16, 15.5952, 7.9536, 3, 9.1466);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (56, 371, 15, 15, 82, 55, 16.7915, 7.2203, 3, 8.5922);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (860, 371, 15, 15, 20, 20, 17.7840, 9.9590, 4, 11.4528);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (837, 371, 15, 15, 88, 76, 62.7912, 20.0932, 3, 24.1118);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1320, 371, 15, 15, 49, 16, 17.4496, 8.3758, 2, 9.9672);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1016, 371, 15, 15, 94, 94, 51.6906, 15.5072, 2, 17.9884);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1099, 371, 15, 15, 29, 29, 35.7048, 17.4954, 1, 20.6446);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (849, 371, 15, 15, 63, 63, 34.3035, 10.9771, 1, 12.2944);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (40, 371, 15, 15, 90, 90, 39.2040, 23.5224, 4, 27.5212);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (910, 371, 15, 15, 12, 2, 1.6192, 0.5020, 4, 0.5823);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (273, 371, 15, 15, 38, 38, 34.7928, 12.5254, 1, 13.7779);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (788, 389, 15, 15, 74, 57, 12.8535, 4.3702, 4, 4.8509);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (271, 389, 15, 15, 96, 96, 127.4112, 49.6904, 2, 58.6347);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (261, 389, 15, 15, 89, 89, 99.2706, 40.7009, 1, 48.0271);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1437, 389, 15, 15, 83, 83, 47.6586, 23.8293, 2, 28.5952);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1027, 389, 15, 15, 38, 38, 51.7902, 27.4488, 1, 31.2916);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (284, 389, 15, 15, 59, 59, 28.0368, 11.2147, 3, 12.5605);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (954, 389, 15, 15, 40, 40, 23.6640, 10.4122, 1, 11.9740);
+create label &quot;label_7&quot;;
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (102, 622, 16, 16, 64, 64, 89.3760, 42.0067, 4, 49.5679);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (79, 622, 16, 16, 37, 37, 29.3040, 10.8425, 3, 12.7942);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (562, 622, 16, 16, 24, 24, 6.6552, 2.1297, 2, 2.4705);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (672, 622, 16, 16, 81, 81, 137.9754, 46.9116, 1, 55.8248);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (755, 622, 16, 16, 18, 18, 21.9924, 10.9962, 1, 13.1954);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (506, 622, 16, 16, 20, 6, 11.0400, 4.0848, 3, 4.6158);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1255, 622, 16, 16, 91, 36, 17.8560, 10.5350, 3, 12.5367);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (152, 622, 16, 16, 89, 89, 128.6050, 68.1607, 4, 81.1112);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1488, 622, 16, 16, 32, 32, 23.9616, 13.4185, 3, 15.9680);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1011, 622, 16, 16, 77, 77, 100.0769, 40.0308, 3, 48.0370);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (93, 376, 17, 17, 93, 93, 44.6400, 17.8560, 2, 20.5344);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1375, 376, 17, 17, 70, 70, 50.6940, 17.7429, 3, 20.5818);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (233, 376, 17, 17, 64, 64, 88.1664, 37.9116, 2, 44.3566);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (543, 376, 17, 17, 43, 43, 21.1560, 11.4242, 4, 13.0236);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (27, 376, 17, 17, 39, 39, 43.4070, 14.3243, 2, 17.1892);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (16, 376, 17, 17, 20, 20, 44.4280, 16.4384, 2, 18.5754);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1192, 376, 17, 17, 43, 43, 15.5918, 8.5755, 3, 9.8618);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1196, 376, 17, 17, 50, 50, 62.7800, 23.8564, 3, 27.4349);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (453, 376, 17, 17, 75, 75, 74.4600, 41.6976, 2, 47.5353);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (709, 376, 17, 17, 85, 30, 8.3790, 3.4354, 4, 3.9164);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1086, 376, 17, 17, 95, 95, 112.9645, 64.3898, 3, 75.9800);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (370, 376, 17, 17, 36, 36, 12.9168, 4.6500, 2, 5.3010);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (959, 376, 17, 17, 55, 55, 30.5250, 12.8205, 2, 14.8718);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (100, 392, 17, 17, 99, 79, 83.1870, 34.9385, 3, 40.5287);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (570, 392, 17, 17, 66, 66, 45.6192, 26.0029, 1, 29.6433);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1132, 392, 17, 17, 70, 70, 65.0720, 37.7418, 2, 42.6482);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (177, 392, 17, 17, 88, 88, 61.3536, 33.7445, 2, 37.4564);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (753, 392, 17, 17, 85, 85, 73.8990, 33.2546, 1, 36.5801);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (583, 392, 17, 17, 72, 54, 34.7760, 19.1268, 3, 21.0395);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (266, 392, 17, 17, 94, 94, 76.1400, 24.3648, 2, 28.2632);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (95, 378, 22, 22, 45, 45, 36.1350, 18.0675, 3, 20.0549);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1510, 378, 22, 22, 79, 79, 44.7456, 23.2677, 1, 25.8271);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1527, 378, 22, 22, 96, 96, 122.8992, 70.0525, 1, 83.3625);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1477, 378, 22, 22, 70, 70, 77.4900, 37.1952, 4, 44.2623);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (68, 378, 22, 22, 56, 56, 99.6800, 34.8880, 3, 41.5167);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1177, 378, 22, 22, 89, 89, 43.8592, 19.7366, 1, 23.4866);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (967, 378, 22, 22, 45, 45, 13.4505, 6.8598, 2, 8.2318);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1184, 378, 22, 22, 47, 47, 72.0792, 36.7604, 3, 41.5393);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (534, 378, 22, 22, 62, 62, 106.8756, 50.2315, 2, 57.2639);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1337, 378, 22, 22, 99, 17, 3.5853, 2.0795, 1, 2.4538);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (833, 367, 22, 22, 52, 52, 49.7120, 23.8618, 4, 27.2025);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1222, 367, 22, 22, 18, 18, 13.6710, 6.4254, 1, 7.1964);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1199, 367, 22, 22, 58, 58, 81.6640, 32.6656, 2, 37.2388);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (123, 367, 22, 22, 34, 34, 78.3360, 32.9011, 3, 39.1523);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (234, 367, 22, 22, 76, 76, 73.8720, 33.2424, 4, 39.5585);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (317, 367, 22, 22, 70, 70, 54.9360, 29.1161, 2, 34.3570);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (67, 367, 22, 22, 49, 49, 30.0762, 16.8427, 4, 19.3691);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (816, 367, 22, 22, 70, 70, 83.3560, 30.0082, 3, 33.9093);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1272, 367, 22, 22, 51, 15, 17.4840, 8.7420, 2, 10.2281);
+insert into foodmart.inventory_fact_1997 (product_id, time_id, warehouse_id, store_id, units_ordered, units_shipped, warehouse_sales, warehouse_cost, supply_time, store_invoice) values (1050, 367, 22, 22, 59, 19, 13.6192, 6.2648, 2, 7.2672);
+create label &quot;label_8&quot;;</sql>
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename/>
+      <connection>Luciddb</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>298</xloc>
+      <yloc>155</yloc>
+      </entry>
+  </entries>
+  <hops>
+    <hop>
+      <from>START</from>
+      <to>creating tables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>warehouse</from>
+      <to>region</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>region</from>
+      <to>time_by_day</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>time_by_day</from>
+      <to>store</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>creating tables</from>
+      <to>Insert into Fact</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Insert into Fact</from>
+      <to>warehouse</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+  </hops>
+  <notepads>
+  </notepads>
+</job>

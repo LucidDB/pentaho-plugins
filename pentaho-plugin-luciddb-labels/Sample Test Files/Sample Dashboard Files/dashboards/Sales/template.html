@@ -1,0 +1,224 @@
+<!--Content Section-->
+<style type="text/css">
+
+#demo {
+   
+    margin-bottom:1em;
+    overflow:hidden;
+    width:870px;
+}
+
+
+#demo-run {
+   
+    margin-bottom:1em;
+    overflow:hidden;
+    width:870px;
+}
+
+#demo-city{
+   
+    margin-bottom:1em;
+    overflow:hidden;
+    width:870px;
+}
+</style>
+
+
+<br>
+
+<div id="demo">
+	<table cellpadding="2" cellspacing="2" border="0">
+		<tr>
+			<td>
+				<table style="border:#d6dfee 1px solid;width:430px;" border="0" cellspacing="0" cellpadding="0">
+					<tr style="background-color:#3361ac;color:#FFFFFF;font-weight:normal;padding:10px;font-size:13px;">
+						<td ><div id="selectdetails" align="center">Month wise Sales</div></td>
+					</tr>
+					<tr style="border:#d6dfee 1px solid;" >
+						<td valign="top">
+							<div id="object_1" align="center"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table style="border:#d6dfee 1px solid;width:430px;" border="0" cellspacing="0" cellpadding="0">
+					<tr style="background-color:#3361ac;color:#FFFFFF;font-weight:normal;padding:10px;font-size:13px;">
+						<td ><div id="selectdetails" align="center">Store wise Sales</div></td>		
+					</tr>
+					<tr style="border:#d6dfee 1px solid;">
+						<td><div id="object_2" align="center"></div></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+ <div id="demo">
+	<table cellpadding="2" cellspacing="2" border="0">
+		<tr>
+			<td>
+				<table style="border:#d6dfee 1px solid;width:870px;" border="0" cellspacing="0" cellpadding="0">
+					<tr style="background-color:#3361ac;color:#FFFFFF;font-weight:normal;padding:10px;font-size:13px;">
+						<td ><div id="selectdetails" align="center">Detailed Report</div></td>
+					</tr>
+					<tr style="border:#d6dfee 1px solid;" >
+						<td valign="top">
+							<div id="object_3" align="center"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			
+		</tr>
+	</table>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+
+
+Monthlysales = 
+{
+  name: "Monthlysales",
+  type: "xaction",
+  solution: "dashboards",
+  path: "Sales",
+  action: "Luc_Monthlysales.xaction",
+ parameters: [[""]],
+  htmlObject: "object_1",
+  executeAtStart: true,
+  preExecution:function(){},
+  postExecution:function(){}
+}
+
+Storesales = 
+{
+  name: "Storesales",
+  type: "xaction",
+  solution: "dashboards",
+  path: "Sales",
+  action: "Luc_Storesales.xaction",
+ parameters: [[""]],
+  htmlObject: "object_2",
+  executeAtStart: true,
+  preExecution:function(){},
+  postExecution:function(){}
+}
+Departmentallindia = 
+{
+  name: "Departmentallindia",
+  type: "xaction",
+  solution: "dashboards",
+  path: "Sales",
+  action: "Label.xaction",
+  parameters: [[""]],
+  htmlObject: "object_3",
+  executeAtStart: true,
+  preExecution:function(){},
+  postExecution:function(){}
+}
+
+/*sectionallindia = 
+{
+  name: "sectionallindia",
+  type: "xaction",
+  solution: "dashboards",
+  path: "Salesbyregion",
+  action: "sectionallindia.xaction",
+ parameters: [["beg_dte","begdate"],["end_dte","enddate"]],
+  htmlObject: "object_4",
+  executeAtStart: true,
+  preExecution:function(){},
+  postExecution:function(){}
+}*/
+
+
+var components = [Monthlysales,Storesales,Departmentallindia];
+
+
+
+/*
+function RenderDashboards()
+{
+progressimage();
+ begdatename = document.getElementById('beg_dte').value;
+     enddatename = document.getElementById('end_dte').value;
+	regionname = document.getElementById('region_id').value;
+   
+Departmentsalesrender = 
+{
+  name: "Departmentsales",
+  type: "xaction",
+  solution: "dashboards",
+  path: "Salesbyregion",
+  action: "Departmentsales.xaction",
+ parameters: [["beg_dte","begdatename"],["end_dte","enddatename"],
+  ["region_id","regionname"]],
+  htmlObject: "object_1",
+  executeAtStart: true,
+  preExecution:function(){},
+  postExecution:function(){}
+}
+
+Sectionsalesrender = 
+{
+  name: "Sectionsales",
+  type: "xaction",
+  solution: "dashboards",
+  path: "Salesbyregion",
+  action: "Sectionsales.xaction",
+ parameters: [["beg_dte","begdatename"],["end_dte","enddatename"],
+  ["region_id","regionname"]],
+  htmlObject: "object_2",
+  executeAtStart: true,
+  preExecution:function(){},
+  postExecution:function(){}
+}
+Departmentallindiarender = 
+{
+  name: "Departmentallindia",
+  type: "xaction",
+  solution: "dashboards",
+  path: "Salesbyregion",
+  action: "Departmentallindia.xaction",
+  parameters: [["beg_dte","begdatename"],["end_dte","enddatename"]],
+  htmlObject: "object_3",
+  executeAtStart: true,
+  preExecution:function(){},
+  postExecution:function(){}
+}
+
+sectionallindiarender = 
+{
+  name: "sectionallindia",
+  type: "xaction",
+  solution: "dashboards",
+  path: "Salesbyregion",
+  action: "sectionallindia.xaction",
+ parameters: [["beg_dte","begdatename"],["end_dte","enddatename"]],
+  htmlObject: "object_4",
+  executeAtStart: true,
+  preExecution:function(){},
+  postExecution:function(){}
+}
+
+var componentsReload = [Departmentsalesrender,Sectionsalesrender,Departmentallindiarender,sectionallindiarender];
+Dashboards.init(componentsReload);
+}
+*/
+
+</script>
+<script language="javascript" type="text/javascript">
+
+var t = setTimeout("load()", 4000);
+function load() {
+Dashboards.init(components);
+
+}
+</script>
+</body>
+</html>

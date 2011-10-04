@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action-sequence> 
+  <title>Warehouse Sales</title>
+  <version>1</version>
+  <logging-level>ERROR</logging-level>
+  <documentation> 
+    <author/>  
+    <description>Empty blank action sequence document</description>  
+    <help/>  
+    <result-type/>  
+    <icon/> 
+  </documentation>
+
+  <inputs> 
+    <chart_width type="string"> 
+      <sources> 
+        <request>chart_width</request> 
+      </sources>  
+      <default-value><![CDATA[100%]]></default-value> 
+    </chart_width>  
+    <chart_height type="string"> 
+      <sources> 
+        <request>chart_height</request> 
+      </sources>  
+      <default-value><![CDATA[100%]]></default-value> 
+    </chart_height> 
+  </inputs>
+
+  <outputs> 
+    <outputstream> 
+      <destinations> 
+        <response>content</response> 
+      </destinations> 
+    </outputstream> 
+  </outputs>
+
+  <resources> 
+    <bar> 
+      <solution-file> 
+        <location>chartbeans_barchart.xml</location>  
+        <mime-type>text/xml</mime-type> 
+      </solution-file> 
+    </bar> 
+  </resources>
+  
+  <actions> 
+    <action-definition> 
+      <component-name>SQLLookupRule</component-name>
+      <action-type>Relational</action-type>
+      <action-outputs> 
+        <query-result type="result-set" mapping="query_result"/> 
+      </action-outputs>
+      <component-definition> 
+        <jndi><![CDATA[LucidDB]]></jndi>  
+        <query><![CDATA[SELECT 
+ TIME_BY_DAY.THE_YEAR,
+    WAREHOUSE.WAREHOUSE_NAME as Warehouse,
+    sum(INVENTORY_FACT_1997.WAREHOUSE_SALES) as sales
+     
+FROM 
+    FOODMART.WAREHOUSE, 
+    FOODMART.INVENTORY_FACT_1997 , 
+    FOODMART.TIME_BY_DAY 
+WHERE 
+    WAREHOUSE.WAREHOUSE_ID       = INVENTORY_FACT_1997.WAREHOUSE_ID
+    and TIME_BY_DAY.TIME_ID  = INVENTORY_FACT_1997.TIME_ID 
+    and TIME_BY_DAY.THE_YEAR = 1997
+group by WAREHOUSE_NAME,TIME_BY_DAY.THE_YEAR]]></query>  
+        <live><![CDATA[true]]></live> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>ChartBeansComponent</component-name>
+      <action-inputs> 
+        <value-column type="string"/>  
+        <category-column type="string"/>  
+        <series-column type="string"/>  
+        <chartdata type="result-set" mapping="query_result"/> 
+      </action-inputs>
+      <action-resources> 
+        <chart-model-xml type="resource" mapping="bar"/> 
+      </action-resources>
+      <action-outputs> 
+        <outputstream/> 
+      </action-outputs>
+      <component-definition/>  
+      <action-name>ChartBeans Vertical Bar Chart</action-name>  
+      <logging-level>DEBUG</logging-level> 
+    </action-definition>
+ 
+  </actions> 
+</action-sequence>

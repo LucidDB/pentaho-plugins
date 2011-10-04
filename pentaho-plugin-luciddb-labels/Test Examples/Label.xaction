@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action-sequence> 
+  <title/>
+  <version>1</version>
+  <logging-level>ERROR</logging-level>
+  <documentation> 
+    <author/>  
+    <description>Empty blank action sequence document</description>  
+    <help/>  
+    <result-type/>  
+    <icon/> 
+  </documentation>
+
+  <inputs> 
+    <output-type type="string"> 
+      <sources> 
+        <request>output-type</request> 
+      </sources>  
+      <default-value><![CDATA[html]]></default-value> 
+    </output-type> 
+  </inputs>
+
+  <outputs/>
+
+  <resources/>
+  
+  <actions> 
+    <action-definition> 
+      <component-name>SQLLookupRule</component-name>
+      <action-type>Relational</action-type>
+      <action-outputs> 
+        <query-result type="result-set" mapping="query_result"/> 
+      </action-outputs>
+      <component-definition> 
+        <jndi><![CDATA[LucidDB]]></jndi>  
+        <query><![CDATA[select sum(UNITS_SHIPPED) as units from INVENTORY_FACT_1997]]></query>  
+        <live><![CDATA[true]]></live> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>JavascriptRule</component-name>
+      <action-type>JavaScript to Build JFreeReport Definition</action-type>
+      <action-inputs> 
+        <query_result type="result-set"/>
+      </action-inputs>
+      <action-outputs> 
+        <report-definition type="string"/> 
+      </action-outputs>
+      <component-definition> 
+        <script><![CDATA[function getReportDefinition() { 
+			      var reportSpec = new Packages.org.pentaho.jfreereport.castormodel.reportspec.ReportSpec();
+			      //reportSpec.setUseRowBanding(false);
+			      var ProductField = new Packages.org.pentaho.jfreereport.castormodel.reportspec.Field();
+			      ProductField.setName("Product");
+			      ProductField.setDisplayName("Product: $(Product)");
+			      ProductField.setHorizontalAlignment("left");
+			      ProductField.setIsDetail(false);
+			      ProductField.addField(ProductField);
+			      
+			      var shippedField = new Packages.org.pentaho.jfreereport.castormodel.reportspec.Field();
+			      shippedField.setName("UNITS_SHIPPED");
+			      shippedField.setDisplayName("Shipped");
+			      shippedField.setIsDetail(true);
+			      shippedField.setType(Packages.java.sql.Types.NUMERIC);
+			      shippedField.setExpression("sum");
+                  shippedField.setHorizontalAlignment("right"); //$NON-NLS-1$
+			      reportSpec.addField(shippedField);
+
+			      
+
+      			  var retStr = Packages.org.pentaho.jfreereport.wizard.utility.report.ReportGenerationUtility.createJFreeReportXML(reportSpec, "UTF-8" );
+			return retStr;
+			    } 
+			    getReportDefinition();]]></script>
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>JFreeReportComponent</component-name>
+      <action-type>Create Report Using Query Results</action-type>
+      <action-inputs> 
+        <data type="result-set" mapping="query_result"/>  
+        <report-definition type="string"/>  
+        <output-type type="string"/> 
+      </action-inputs>
+      <action-resources/>
+      <component-definition> 
+        <output-type>html</output-type> 
+      </component-definition> 
+    </action-definition>
+ 
+  </actions> 
+</action-sequence>
